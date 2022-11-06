@@ -56,6 +56,7 @@ const Home: NextPage = () => {
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
         <AuthShowcase />
+        <MutateTest />
       </main>
     </>
   );
@@ -86,6 +87,36 @@ const AuthShowcase: React.FC = () => {
         onClick={sessionData ? () => signOut() : () => signIn()}
       >
         {sessionData ? "Sign out" : "Sign in"}
+      </button>
+    </div>
+  );
+};
+
+const MutateTest: React.FC = () => {
+  const utils = trpc.useContext();
+  const { data: sessionData } = useSession();
+
+  const { mutate } = trpc.example.testMutate.useMutation({
+    onSuccess: () => {
+      utils.example.testGet.invalidate();
+    },
+  });
+
+  const { data: count } = trpc.example.testGet.useQuery(
+    undefined, // no input
+    { enabled: sessionData?.user !== undefined }
+  );
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-2">
+      <button
+        className="rounded-md border border-black bg-violet-50 px-4 py-2 text-xl shadow-lg hover:bg-violet-100"
+        onClick={() => {
+          // temp
+          mutate();
+        }}
+      >
+        Test Mutate - {count}
       </button>
     </div>
   );
