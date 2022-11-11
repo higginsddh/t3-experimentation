@@ -4,7 +4,10 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-  content: ["./src/**/*.{js,ts,jsx,tsx}", "./node_modules/flowbite/**/*.js"],
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     screens: {
       sm: "480px",
