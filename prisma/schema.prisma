@@ -20,6 +20,11 @@ model Example {
   updatedAt DateTime @updatedAt
 }
 
+model Shoppinglistitem {
+  id        String   @id @default(cuid())
+  item String 
+}
+
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
