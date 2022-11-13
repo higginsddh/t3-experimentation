@@ -2,19 +2,20 @@ import React from "react";
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const ShoppingList: React.FC = () => {
   const [item, setItem] = useState("");
   const utils = trpc.useContext();
   // const { data: sessionData } = useSession();
 
-  const { mutate } = trpc.shoppingList.addItem.useMutation({
-    onSuccess: () => {
-      utils.shoppingList.getAll.invalidate();
-      setItem("");
-    },
-  });
+  const { mutate: addItem, isLoading: isAddingItem } =
+    trpc.shoppingList.addItem.useMutation({
+      onSuccess: () => {
+        utils.shoppingList.getAll.invalidate();
+        setItem("");
+      },
+    });
 
   const { data: items, isLoading: isLoadingItems } =
     trpc.shoppingList.getAll.useQuery();
@@ -27,7 +28,7 @@ const ShoppingList: React.FC = () => {
           className="block w-full"
           onSubmit={(e) => {
             e.preventDefault();
-            mutate({
+            addItem({
               text: item,
             });
           }}
@@ -58,8 +59,13 @@ const ShoppingList: React.FC = () => {
             <button
               type="submit"
               className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400"
+              disabled={isAddingItem}
             >
-              <FontAwesomeIcon icon={faPlus} />
+              {isAddingItem ? (
+                <FontAwesomeIcon icon={faSpinner} spin className="w-4" />
+              ) : (
+                <FontAwesomeIcon icon={faPlus} className="w-4" />
+              )}
             </button>
           </div>
         </form>
