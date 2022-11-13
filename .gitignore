@@ -32,9 +32,12 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+/public 
+public
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+public/sw.js.map

@@ -20,7 +20,7 @@ model Example {
   updatedAt DateTime @updatedAt
 }
 
-model Shoppinglistitem {
+model ShoppingListItem {
   id        String   @id @default(cuid())
   item String 
 }
