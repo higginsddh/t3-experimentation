@@ -6,13 +6,13 @@ export const shoppingListRouter = router({
   addItem: publicProcedure
     .input(z.object({ text: z.string() }))
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.shoppinglistitem.create({
+      return ctx.prisma.shoppingListItem.create({
         data: {
           item: input.text,
         },
       });
     }),
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.shoppinglistitem.findMany();
+    return ctx.prisma.shoppingListItem.findMany();
   }),
 });
