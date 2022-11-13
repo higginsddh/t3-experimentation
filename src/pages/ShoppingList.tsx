@@ -2,10 +2,15 @@ import React from "react";
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsUpDown,
+  faPlus,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 
 const ShoppingList: React.FC = () => {
   const [item, setItem] = useState("");
+  const [quantity, setQuantity] = useState("1");
   const utils = trpc.useContext();
   // const { data: sessionData } = useSession();
 
@@ -14,6 +19,7 @@ const ShoppingList: React.FC = () => {
       onSuccess: () => {
         utils.shoppingList.getAll.invalidate();
         setItem("");
+        setQuantity(1);
       },
     });
 
@@ -30,41 +36,64 @@ const ShoppingList: React.FC = () => {
             e.preventDefault();
             addItem({
               text: item,
+              quantity: parseInt(quantity),
             });
           }}
         >
           <div className="flex">
             <input
               type="text"
-              className="block w-full min-w-0 flex-1 rounded-none rounded-l-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className="block flex-1 rounded border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="Add item..."
               value={item}
               onChange={(e) => setItem(e.currentTarget.value)}
               required
+              aria-label="Shopping list item"
+            />
+            <input
+              type="number"
+              className="ml-5 w-14 rounded border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              value={quantity}
+              onChange={(e) => setQuantity(e.currentTarget.value)}
+              required
+              max={99}
+              aria-label="Shopping list quantity"
             />
             <button
               type="submit"
-              className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400"
+              className="ml-5 inline-flex items-center rounded border border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400"
               disabled={isAddingItem}
             >
               {isAddingItem ? (
-                <FontAwesomeIcon icon={faSpinner} spin className="w-4" />
+                <FontAwesomeIcon icon={faSpinner} spin className="w-2" />
               ) : (
-                <FontAwesomeIcon icon={faPlus} className="w-4" />
+                <FontAwesomeIcon icon={faPlus} className="w-2" />
               )}
             </button>
           </div>
         </form>
         {items?.map((i) => (
-          <div className="w-full" key={i.id}>
+          <div className="flex w-full" key={i.id}>
             <input
-              type="email"
-              id="email"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              type="text"
+              className="block flex-1 rounded border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="Add item..."
               value={i.item}
               required
             />
+            <input
+              type="number"
+              className="ml-5 w-14 rounded border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              value={i.quantity.toString()}
+              required
+            />
+            <button
+              type="submit"
+              className="ml-5 inline-flex items-center rounded border border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400"
+              disabled
+            >
+              <FontAwesomeIcon icon={faArrowsUpDown} className="w-2" />
+            </button>
           </div>
         ))}
       </div>

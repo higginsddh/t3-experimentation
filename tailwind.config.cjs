@@ -10,6 +10,7 @@ module.exports = {
     "./node_modules/flowbite/**/*.{js,ts,jsx,tsx}",
     "./node_modules/flowbite-react/**/*.{js,ts,jsx,tsx}",
   ],
+  darkModle: "class",
   theme: {
     screens: {
       sm: "480px",

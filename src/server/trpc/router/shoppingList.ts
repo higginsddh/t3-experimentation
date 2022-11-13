@@ -4,11 +4,13 @@ import { router, publicProcedure } from "../trpc";
 
 export const shoppingListRouter = router({
   addItem: publicProcedure
-    .input(z.object({ text: z.string() }))
+    .input(z.object({ text: z.string(), quantity: z.number() }))
     .mutation(({ input, ctx }) => {
       return ctx.prisma.shoppingListItem.create({
         data: {
           item: input.text,
+          quantity: input.quantity,
+          order: 0,
         },
       });
     }),
