@@ -19,7 +19,7 @@ const ShoppingList: React.FC = () => {
       onSuccess: () => {
         utils.shoppingList.getAll.invalidate();
         setItem("");
-        setQuantity(1);
+        setQuantity("1");
       },
     });
 
