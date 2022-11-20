@@ -32,7 +32,7 @@ export const shoppingListRouter = router({
 
       return await ctx.prisma.shoppingListItem.create({
         data: {
-          item: input.text,
+          text: input.text,
           quantity: input.quantity,
           order: 0,
         },

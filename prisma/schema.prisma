@@ -14,7 +14,7 @@ datasource db {
 
 model ShoppingListItem {
   id       String @id @default(cuid())
-  item     String
+  text     String
   quantity Int    @default(1)
   order    Int    @default(0)
 }

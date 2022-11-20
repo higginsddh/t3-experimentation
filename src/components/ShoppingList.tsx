@@ -81,7 +81,7 @@ function ShoppingListExistingItems({
             </ActionIcon>
           }
           values={{
-            text: i.item,
+            text: i.text,
             quantity: i.quantity,
           }}
           onValuesChange={() => {
@@ -93,15 +93,39 @@ function ShoppingListExistingItems({
   );
 }
 
+let newItemCount = 0;
 function ShoppingListCreate() {
   const [newItemValues, setNewItemValues] =
     useState<ShoppingListItemValues>(newItemDefaultValues);
   const utils = trpc.useContext();
 
   const { mutate: addItem } = trpc.shoppingList.addItem.useMutation({
-    onSuccess: () => {
-      utils.shoppingList.getAll.invalidate();
+    async onMutate(newItem) {
+      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+      await utils.shoppingList.getAll.cancel();
+
+      const previousData = utils.shoppingList.getAll.getData();
+
+      newItemCount++;
+      utils.shoppingList.getAll.setData((old) => [
+        { id: `newitem${newItemCount}`, order: 0, ...newItem },
+        ...(old ?? []),
+      ]);
+
       setNewItemValues(newItemDefaultValues);
+
+      return { previousData };
+    },
+
+    onSettled: () => {
+      utils.shoppingList.getAll.invalidate();
+    },
+
+    onError(err, newItem, ctx) {
+      setNewItemValues(newItem);
+
+      // If the mutation fails, use the context-value from onMutate
+      utils.shoppingList.getAll.setData(() => ctx?.previousData ?? []);
     },
   });
 
