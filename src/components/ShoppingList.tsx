@@ -24,13 +24,13 @@ type ShoppingListItemValues = {
 const ShoppingList: React.FC = () => {
   const {
     data: items,
-    isFetching: isFetchingItems,
+    isInitialLoading: isLoadingItems,
     isError: isErrorFetchingItems,
   } = trpc.shoppingList.getAll.useQuery();
 
   return (
     <div style={{ position: "relative" }}>
-      {isFetchingItems ? <Spinner /> : null}
+      {isLoadingItems ? <Spinner /> : null}
 
       {isErrorFetchingItems ? (
         <ErrorLoadingItems />
