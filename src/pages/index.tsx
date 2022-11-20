@@ -1,7 +1,7 @@
 import { Container } from "@mantine/core";
 import { type NextPage } from "next";
 import Head from "next/head";
-import { NavBar } from "./NavBar";
+import { NavBar } from "../components/NavBar";
 // import Link from "next/link";
 // import { signIn, signOut, useSession } from "next-auth/react";
 
