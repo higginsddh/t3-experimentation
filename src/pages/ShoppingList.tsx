@@ -1,74 +1,77 @@
 import React from "react";
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowsUpDown,
-  faPlus,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
 import {
   ActionIcon,
-  createStyles,
+  Alert,
   Flex,
-  Input,
   LoadingOverlay,
   NumberInput,
   TextInput,
 } from "@mantine/core";
-import { IconArrowsMoveVertical, IconPlus } from "@tabler/icons";
+import {
+  IconAlertCircle,
+  IconArrowsMoveVertical,
+  IconPlus,
+} from "@tabler/icons";
+import { type ShoppingListItem } from "@prisma/client";
 
 type ShoppingListItemValues = {
   text: string;
   quantity: number;
 };
+
+const ShoppingList: React.FC = () => {
+  const {
+    data: items,
+    isFetching: isFetchingItems,
+    isError: isErrorFetchingItems,
+  } = trpc.shoppingList.getAll.useQuery();
+
+  return (
+    <div style={{ position: "relative" }}>
+      {isFetchingItems ? <Spinner /> : null}
+
+      {isErrorFetchingItems ? (
+        <ErrorLoadingItems />
+      ) : (
+        <>
+          <ShoppingListCreate />
+
+          <ShoppingListExistingItems items={items ?? []} />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default ShoppingList;
+
+function ErrorLoadingItems() {
+  return (
+    <Alert
+      icon={<IconAlertCircle size={16} />}
+      title="Error!"
+      color="red"
+      radius="md"
+    >
+      The shopping list was unable to load. Please try again!
+    </Alert>
+  );
+}
+
 const newItemDefaultValues = {
   text: "",
   quantity: 1,
 };
 
-const ShoppingList: React.FC = () => {
-  const [newItemValues, setNewItemValues] =
-    useState<ShoppingListItemValues>(newItemDefaultValues);
-  const utils = trpc.useContext();
-  // const { data: sessionData } = useSession();
-
-  const { mutate: addItem, isLoading: isAddingItem } =
-    trpc.shoppingList.addItem.useMutation({
-      onSuccess: () => {
-        utils.shoppingList.getAll.invalidate();
-        setNewItemValues(newItemDefaultValues);
-      },
-    });
-
-  const { data: items, isLoading: isLoadingItems } =
-    trpc.shoppingList.getAll.useQuery();
-
+function ShoppingListExistingItems({
+  items,
+}: {
+  items: Array<ShoppingListItem>;
+}) {
   return (
     <>
-      {isLoadingItems ? <Spinner /> : null}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          addItem(newItemValues);
-        }}
-      >
-        <ShoppingListItemForm
-          icon={
-            <ActionIcon
-              variant="filled"
-              size={"lg"}
-              component="button"
-              type="submit"
-            >
-              <IconPlus size={18} />
-            </ActionIcon>
-          }
-          values={newItemValues}
-          onValuesChange={setNewItemValues}
-        />
-      </form>
-
       {items?.map((i) => (
         <ShoppingListItemForm
           key={i.id}
@@ -88,9 +91,44 @@ const ShoppingList: React.FC = () => {
       ))}
     </>
   );
-};
+}
 
-export default ShoppingList;
+function ShoppingListCreate() {
+  const [newItemValues, setNewItemValues] =
+    useState<ShoppingListItemValues>(newItemDefaultValues);
+  const utils = trpc.useContext();
+
+  const { mutate: addItem } = trpc.shoppingList.addItem.useMutation({
+    onSuccess: () => {
+      utils.shoppingList.getAll.invalidate();
+      setNewItemValues(newItemDefaultValues);
+    },
+  });
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        addItem(newItemValues);
+      }}
+    >
+      <ShoppingListItemForm
+        icon={
+          <ActionIcon
+            variant="filled"
+            size={"lg"}
+            component="button"
+            type="submit"
+          >
+            <IconPlus size={18} />
+          </ActionIcon>
+        }
+        values={newItemValues}
+        onValuesChange={setNewItemValues}
+      />
+    </form>
+  );
+}
 
 function ShoppingListItemForm({
   icon,
@@ -122,7 +160,6 @@ function ShoppingListItemForm({
       />
 
       <NumberInput
-        placeholder="Add quantity..."
         value={values.quantity}
         onChange={(e) =>
           onValuesChange({
@@ -146,10 +183,5 @@ function ShoppingListItemForm({
 }
 
 function Spinner() {
-  return (
-    <div style={{ width: 400, position: "relative" }}>
-      <LoadingOverlay visible overlayBlur={2} />
-      {/* ...other content */}
-    </div>
-  );
+  return <LoadingOverlay visible overlayBlur={2} />;
 }

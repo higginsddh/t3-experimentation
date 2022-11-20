@@ -1,4 +1,4 @@
-import { Button, Container, Group, Header, Input } from "@mantine/core";
+import { Container } from "@mantine/core";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { NavBar } from "./NavBar";
