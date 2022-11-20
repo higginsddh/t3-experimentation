@@ -6,6 +6,7 @@ const shoppingListBase = z.object({
   text: z.string(),
   quantity: z.number(),
   order: z.number().optional(),
+  checked: z.boolean().optional(),
 });
 
 const shoppingListUpdate = shoppingListBase

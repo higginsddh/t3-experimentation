@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   ActionIcon,
   Alert,
+  Checkbox,
   Flex,
   LoadingOverlay,
   NumberInput,
@@ -19,6 +20,7 @@ import { type ShoppingListItem } from "@prisma/client";
 type ShoppingListItemValues = {
   text: string;
   quantity: number;
+  purchased?: boolean;
 };
 
 const ShoppingList: React.FC = () => {
@@ -74,6 +76,7 @@ function ShoppingListExistingItems({
     <>
       {items?.map((i) => (
         <ShoppingListItemForm
+          showPurchasedCheckbox
           key={i.id}
           icon={
             <ActionIcon variant="filled" size={"lg"}>
@@ -158,13 +161,33 @@ function ShoppingListItemForm({
   icon,
   values,
   onValuesChange,
+  showPurchasedCheckbox,
 }: {
   icon: JSX.Element;
   values: ShoppingListItemValues;
   onValuesChange(args: ShoppingListItemValues): void;
+  showPurchasedCheckbox?: boolean;
 }) {
   return (
     <Flex columnGap={"md"} mb="sm">
+      {showPurchasedCheckbox ? (
+        <Checkbox
+          onChange={(e) =>
+            onValuesChange({
+              ...values,
+              purchased: e.currentTarget.checked,
+            })
+          }
+          checked={values.purchased ?? false}
+          styles={{
+            root: {
+              alignSelf: "flex-end",
+              width: "20px",
+            },
+          }}
+        />
+      ) : null}
+
       <TextInput
         placeholder="Add item..."
         value={values.text}
