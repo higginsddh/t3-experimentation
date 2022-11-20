@@ -6,7 +6,7 @@ import { NavBar } from "../components/NavBar";
 // import { signIn, signOut, useSession } from "next-auth/react";
 
 // import { trpc } from "../utils/trpc";
-import ShoppingList from "./ShoppingList";
+import ShoppingList from "../components/ShoppingList";
 
 const Home: NextPage = () => {
   // const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
