@@ -81,7 +81,7 @@ function ShoppingListExistingItems({
             </ActionIcon>
           }
           values={{
-            text: i.text,
+            text: i.text ?? "",
             quantity: i.quantity,
           }}
           onValuesChange={() => {
@@ -108,7 +108,7 @@ function ShoppingListCreate() {
 
       newItemCount++;
       utils.shoppingList.getAll.setData((old) => [
-        { id: `newitem${newItemCount}`, order: 0, ...newItem },
+        { id: `newitem${newItemCount}`, order: 0, item: null, ...newItem },
         ...(old ?? []),
       ]);
 
