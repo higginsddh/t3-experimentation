@@ -72,6 +72,9 @@ function ShoppingListExistingItems({
 }: {
   items: Array<ShoppingListItem>;
 }) {
+  const [itemValues, setItemValues] =
+    useState<ShoppingListItemValues>(newItemDefaultValues);
+
   return (
     <>
       {items?.map((i) => (
@@ -83,12 +86,9 @@ function ShoppingListExistingItems({
               <IconArrowsMoveVertical size={18} />
             </ActionIcon>
           }
-          values={{
-            text: i.text ?? "",
-            quantity: i.quantity,
-          }}
-          onValuesChange={() => {
-            return;
+          values={itemValues}
+          onValuesChange={(newValues) => {
+            setItemValues(newValues);
           }}
         />
       ))}
@@ -172,12 +172,12 @@ function ShoppingListItemForm({
     <Flex columnGap={"md"} mb="sm">
       {showPurchasedCheckbox ? (
         <Checkbox
-          onChange={(e) =>
+          onChange={(e) => {
             onValuesChange({
               ...values,
               purchased: e.currentTarget.checked,
-            })
-          }
+            });
+          }}
           checked={values.purchased ?? false}
           styles={{
             root: {
