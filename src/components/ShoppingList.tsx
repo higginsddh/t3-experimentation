@@ -72,15 +72,34 @@ function ShoppingListExistingItems({
 }: {
   items: Array<ShoppingListItem>;
 }) {
-  const [itemValues, setItemValues] =
-    useState<ShoppingListItemValues>(newItemDefaultValues);
-
   return (
     <>
       {items?.map((i) => (
+        <ShoppingListExistingItem
+          key={i.id}
+          item={i}
+        />
+      ))}
+    </>
+  );
+}
+
+function ShoppingListExistingItem({
+  item,
+}: {
+  item: ShoppingListItem;
+}) {
+  const [itemValues, setItemValues] =
+    useState<ShoppingListItemValues>({
+      text: item.text ?? '',
+      quantity: item.quantity,
+      purchased: item.purchased
+    });
+
+  return (
+    <>
         <ShoppingListItemForm
           showPurchasedCheckbox
-          key={i.id}
           icon={
             <ActionIcon variant="filled" size={"lg"}>
               <IconArrowsMoveVertical size={18} />
@@ -91,7 +110,6 @@ function ShoppingListExistingItems({
             setItemValues(newValues);
           }}
         />
-      ))}
     </>
   );
 }
@@ -111,7 +129,7 @@ function ShoppingListCreate() {
 
       newItemCount++;
       utils.shoppingList.getAll.setData((old) => [
-        { id: `newitem${newItemCount}`, order: 0, item: null, ...newItem },
+        { id: `newitem${newItemCount}`, order: 0, purchased: false, ...newItem },
         ...(old ?? []),
       ]);
 
