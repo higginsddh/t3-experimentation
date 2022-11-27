@@ -75,41 +75,33 @@ function ShoppingListExistingItems({
   return (
     <>
       {items?.map((i) => (
-        <ShoppingListExistingItem
-          key={i.id}
-          item={i}
-        />
+        <ShoppingListExistingItem key={i.id} item={i} />
       ))}
     </>
   );
 }
 
-function ShoppingListExistingItem({
-  item,
-}: {
-  item: ShoppingListItem;
-}) {
-  const [itemValues, setItemValues] =
-    useState<ShoppingListItemValues>({
-      text: item.text ?? '',
-      quantity: item.quantity,
-      purchased: item.purchased
-    });
+function ShoppingListExistingItem({ item }: { item: ShoppingListItem }) {
+  const [itemValues, setItemValues] = useState<ShoppingListItemValues>({
+    text: item.text ?? "",
+    quantity: item.quantity,
+    purchased: item.purchased,
+  });
 
   return (
     <>
-        <ShoppingListItemForm
-          showPurchasedCheckbox
-          icon={
-            <ActionIcon variant="filled" size={"lg"}>
-              <IconArrowsMoveVertical size={18} />
-            </ActionIcon>
-          }
-          values={itemValues}
-          onValuesChange={(newValues) => {
-            setItemValues(newValues);
-          }}
-        />
+      <ShoppingListItemForm
+        showPurchasedCheckbox
+        icon={
+          <ActionIcon variant="filled" size={"lg"}>
+            <IconArrowsMoveVertical size={18} />
+          </ActionIcon>
+        }
+        values={itemValues}
+        onValuesChange={(newValues) => {
+          setItemValues(newValues);
+        }}
+      />
     </>
   );
 }
@@ -128,10 +120,16 @@ function ShoppingListCreate() {
       const previousData = utils.shoppingList.getAll.getData();
 
       newItemCount++;
-      utils.shoppingList.getAll.setData((old) => [
-        { id: `newitem${newItemCount}`, order: 0, purchased: false, ...newItem },
+      utils.shoppingList.getAll.setData(undefined, (old) => [
+        {
+          id: `newitem${newItemCount}`,
+          order: 0,
+          purchased: false,
+          ...newItem,
+        },
         ...(old ?? []),
       ]);
+      console.log("onmutate");
 
       setNewItemValues(newItemDefaultValues);
 
@@ -146,7 +144,10 @@ function ShoppingListCreate() {
       setNewItemValues(newItem);
 
       // If the mutation fails, use the context-value from onMutate
-      utils.shoppingList.getAll.setData(() => ctx?.previousData ?? []);
+      utils.shoppingList.getAll.setData(
+        undefined,
+        () => ctx?.previousData ?? []
+      );
     },
   });
 
@@ -170,6 +171,7 @@ function ShoppingListCreate() {
         }
         values={newItemValues}
         onValuesChange={setNewItemValues}
+        hideQuantity
       />
     </form>
   );
@@ -180,11 +182,13 @@ function ShoppingListItemForm({
   values,
   onValuesChange,
   showPurchasedCheckbox,
+  hideQuantity,
 }: {
   icon: JSX.Element;
   values: ShoppingListItemValues;
   onValuesChange(args: ShoppingListItemValues): void;
   showPurchasedCheckbox?: boolean;
+  hideQuantity?: boolean;
 }) {
   return (
     <Flex columnGap={"md"} mb="sm">
@@ -224,23 +228,26 @@ function ShoppingListItemForm({
         }}
       />
 
-      <NumberInput
-        value={values.quantity}
-        onChange={(e) =>
-          onValuesChange({
-            ...values,
-            quantity: e ?? 1,
-          })
-        }
-        required
-        max={99}
-        aria-label="Shopping list quantity"
-        styles={{
-          root: {
-            width: "65px",
-          },
-        }}
-      />
+      {!hideQuantity ? (
+        <NumberInput
+          value={values.quantity}
+          onChange={(e) =>
+            onValuesChange({
+              ...values,
+              quantity: e ?? 1,
+            })
+          }
+          required
+          max={99}
+          min={1}
+          aria-label="Shopping list quantity"
+          styles={{
+            root: {
+              width: "65px",
+            },
+          }}
+        />
+      ) : null}
 
       {icon}
     </Flex>
