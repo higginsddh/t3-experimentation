@@ -87,6 +87,41 @@ function ShoppingListExistingItem({ item }: { item: ShoppingListItem }) {
     quantity: item.quantity,
     purchased: item.purchased,
   });
+  const utils = trpc.useContext();
+
+  const { mutate: updateItem } = trpc.shoppingList.updateItem.useMutation({
+    async onMutate(updatedItem) {
+      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+      await utils.shoppingList.getAll.cancel();
+
+      const previousData = utils.shoppingList.getAll.getData();
+
+      newItemCount++;
+      utils.shoppingList.getAll.setData(undefined, (old) =>
+        !old
+          ? old
+          : old.map((o) => {
+              return o;
+            })
+      );
+
+      // setNewItemValues(newItemDefaultValues);
+
+      return { previousData };
+    },
+
+    onSettled: () => {
+      utils.shoppingList.getAll.invalidate();
+    },
+
+    onError(err, newItem, ctx) {
+      // If the mutation fails, use the context-value from onMutate
+      utils.shoppingList.getAll.setData(
+        undefined,
+        () => ctx?.previousData ?? []
+      );
+    },
+  });
 
   return (
     <>
@@ -129,7 +164,6 @@ function ShoppingListCreate() {
         },
         ...(old ?? []),
       ]);
-      console.log("onmutate");
 
       setNewItemValues(newItemDefaultValues);
 
