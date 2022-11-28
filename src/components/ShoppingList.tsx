@@ -134,6 +134,10 @@ function ShoppingListExistingItem({ item }: { item: ShoppingListItem }) {
         }
         values={itemValues}
         onValuesChange={(newValues) => {
+          updateItem({
+            id: item.id,
+            ...newValues
+          })
           setItemValues(newValues);
         }}
       />
