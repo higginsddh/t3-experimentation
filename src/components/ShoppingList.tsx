@@ -101,7 +101,14 @@ function ShoppingListExistingItem({ item }: { item: ShoppingListItem }) {
         !old
           ? old
           : old.map((o) => {
-              return o;
+              if (o.id === updatedItem.id) {
+                return {
+                  ...o,
+                  ...updatedItem,
+                };
+              } else {
+                return o;
+              }
             })
       );
 
@@ -136,8 +143,8 @@ function ShoppingListExistingItem({ item }: { item: ShoppingListItem }) {
         onValuesChange={(newValues) => {
           updateItem({
             id: item.id,
-            ...newValues
-          })
+            ...newValues,
+          });
           setItemValues(newValues);
         }}
       />
@@ -260,6 +267,9 @@ function ShoppingListItemForm({
         required
         aria-label="Shopping list item"
         styles={{
+          input: {
+            textDecoration: values.purchased ? "line-through" : undefined,
+          },
           root: {
             flexGrow: 1,
           },
@@ -280,6 +290,9 @@ function ShoppingListItemForm({
           min={1}
           aria-label="Shopping list quantity"
           styles={{
+            input: {
+              textDecoration: values.purchased ? "line-through" : undefined,
+            },
             root: {
               width: "65px",
             },
