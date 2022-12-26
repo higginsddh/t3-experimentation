@@ -62,4 +62,58 @@ export const shoppingListRouter = router({
       ],
     });
   }),
+
+  reorder: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        newOrder: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const item = await ctx.prisma.shoppingListItem.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (item && item.order !== input.newOrder) {
+        if (item.order < input.newOrder) {
+          await ctx.prisma.shoppingListItem.updateMany({
+            where: {
+              order: {
+                gte: item.order,
+              },
+            },
+            data: {
+              order: {
+                decrement: 1,
+              },
+            },
+          });
+        } else if (item.order > input.newOrder) {
+          await ctx.prisma.shoppingListItem.updateMany({
+            where: {
+              order: {
+                gte: input.newOrder,
+              },
+            },
+            data: {
+              order: {
+                decrement: 1,
+              },
+            },
+          });
+        }
+
+        await ctx.prisma.shoppingListItem.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            order: input.newOrder,
+          },
+        });
+      }
+    }),
 });
