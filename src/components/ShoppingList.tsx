@@ -10,7 +10,16 @@ const ShoppingList: React.FC = () => {
     data: items,
     isInitialLoading: isLoadingItems,
     isError: isErrorFetchingItems,
-  } = trpc.shoppingList.getAll.useQuery();
+  } = trpc.shoppingList.getAll.useQuery(undefined, {
+    onSuccess: (data) => {
+      console.log(
+        data.map((d) => ({
+          order: d.order,
+          text: d.text,
+        }))
+      );
+    },
+  });
 
   return (
     <div style={{ position: "relative" }}>

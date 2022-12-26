@@ -43,8 +43,6 @@ export function ShoppingListExistingItem({
             })
       );
 
-      // setNewItemValues(newItemDefaultValues);
-
       return { previousData };
     },
 
