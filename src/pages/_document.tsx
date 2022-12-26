@@ -1,11 +1,16 @@
 import React from "react";
-import { createGetInitialProps } from "@mantine/next";
+import type { DocumentContext, DocumentInitialProps } from "next/document";
 import Document, { Head, Html, Main, NextScript } from "next/document";
-
-const getInitialProps = createGetInitialProps();
+import { resetServerContext } from "react-beautiful-dnd";
 
 export default class _Document extends Document {
-  static getInitialProps = getInitialProps;
+  static async getInitialProps(
+    ctx: DocumentContext
+  ): Promise<DocumentInitialProps> {
+    const initialProps = await Document.getInitialProps(ctx);
+    resetServerContext();
+    return { ...initialProps };
+  }
 
   render() {
     return (
