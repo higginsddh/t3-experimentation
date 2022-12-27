@@ -78,33 +78,31 @@ export const shoppingListRouter = router({
       });
 
       if (item && item.order !== input.newOrder) {
-        if (item.order < input.newOrder) {
-          await ctx.prisma.shoppingListItem.updateMany({
-            where: {
-              order: {
-                gte: item.order,
-              },
+        await ctx.prisma.shoppingListItem.updateMany({
+          where: {
+            order: {
+              gte: item.order,
             },
-            data: {
-              order: {
-                decrement: 1,
-              },
+          },
+          data: {
+            order: {
+              decrement: 1,
             },
-          });
-        } else if (item.order > input.newOrder) {
-          await ctx.prisma.shoppingListItem.updateMany({
-            where: {
-              order: {
-                gte: input.newOrder,
-              },
+          },
+        });
+
+        await ctx.prisma.shoppingListItem.updateMany({
+          where: {
+            order: {
+              gte: input.newOrder,
             },
-            data: {
-              order: {
-                decrement: 1,
-              },
+          },
+          data: {
+            order: {
+              increment: 1,
             },
-          });
-        }
+          },
+        });
 
         await ctx.prisma.shoppingListItem.update({
           where: {
