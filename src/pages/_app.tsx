@@ -1,7 +1,8 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider } from "@mantine/core";
+import { rtlCache } from "../rtl-cache";
 
 import { trpc } from "../utils/trpc";
 
@@ -13,11 +14,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-    <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-    >
-      <Component {...pageProps} />
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        emotionCache={rtlCache}
+      >
+        <Component {...pageProps} />
       </MantineProvider>
     </SessionProvider>
   );
