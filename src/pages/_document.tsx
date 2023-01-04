@@ -3,9 +3,8 @@ import type { DocumentContext, DocumentInitialProps } from "next/document";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { resetServerContext } from "react-beautiful-dnd";
 import { createStylesServer, ServerStyles } from "@mantine/next";
-import { rtlCache } from "../rtl-cache";
 
-const stylesServer = createStylesServer(rtlCache);
+const stylesServer = createStylesServer();
 
 export default class _Document extends Document {
   static async getInitialProps(
