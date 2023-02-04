@@ -3,13 +3,13 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  previewFeatures = []
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model ShoppingListItem {
