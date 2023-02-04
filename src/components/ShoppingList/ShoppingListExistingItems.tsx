@@ -2,6 +2,7 @@ import type { ShoppingListItem } from "@prisma/client";
 import { ShoppingListExistingItem } from "./ShoppingListItem";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { trpc } from "../../utils/trpc";
+import { ShoppingListDeleteItems } from "./ShoppingListDeleteItems";
 
 export function ShoppingListExistingItems({
   items,
@@ -47,29 +48,32 @@ export function ShoppingListExistingItems({
   });
 
   return (
-    <DragDropContext
-      onDragEnd={(result) => {
-        if (typeof result.destination?.index === "number") {
-          reorder({
-            id: result.draggableId,
-            newOrder: result.destination.index,
-          });
-        }
-      }}
-    >
-      <Droppable droppableId="droppable">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            <>
-              {items?.map((i, index) => (
-                <ShoppingListExistingItem key={i.id} item={i} index={index} />
-              ))}
-            </>
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <>
+      <DragDropContext
+        onDragEnd={(result) => {
+          if (typeof result.destination?.index === "number") {
+            reorder({
+              id: result.draggableId,
+              newOrder: result.destination.index,
+            });
+          }
+        }}
+      >
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              <>
+                {items?.map((i, index) => (
+                  <ShoppingListExistingItem key={i.id} item={i} index={index} />
+                ))}
+              </>
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <ShoppingListDeleteItems items={items} />
+    </>
   );
 }
 

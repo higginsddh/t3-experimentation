@@ -16,7 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <Component {...pageProps} />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </MantineProvider>
     </SessionProvider>
   );

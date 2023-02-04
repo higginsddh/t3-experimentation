@@ -63,6 +63,22 @@ export const shoppingListRouter = router({
     });
   }),
 
+  deleteItems: publicProcedure
+    .input(
+      z.object({
+        itemsToDelete: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.shoppingListItem.deleteMany({
+        where: {
+          id: {
+            in: input.itemsToDelete,
+          },
+        },
+      });
+    }),
+
   reorder: publicProcedure
     .input(
       z.object({
@@ -75,13 +91,16 @@ export const shoppingListRouter = router({
         where: {
           id: input.id,
         },
+        select: {
+          order: true,
+        },
       });
 
       if (item && item.order !== input.newOrder) {
         await ctx.prisma.shoppingListItem.updateMany({
           where: {
             order: {
-              gte: item.order,
+              gt: item.order,
             },
           },
           data: {
