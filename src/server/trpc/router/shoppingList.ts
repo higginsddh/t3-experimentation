@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+import type { Prisma } from "@prisma/client";
 import { router, publicProcedure } from "../trpc";
 
 const shoppingListBase = z.object({
@@ -83,24 +83,43 @@ export const shoppingListRouter = router({
     .input(
       z.object({
         id: z.string(),
-        newOrder: z.number(),
+        precedingId: z.string().nullable(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const item = await ctx.prisma.shoppingListItem.findFirst({
-        where: {
+      const shoppingListWhereInput: Array<Prisma.ShoppingListItemWhereInput> = [
+        {
           id: input.id,
         },
+      ];
+
+      if (input.precedingId !== null) {
+        shoppingListWhereInput.push({
+          id: input.precedingId,
+        });
+      }
+
+      const items = await ctx.prisma.shoppingListItem.findMany({
+        where: {
+          OR: shoppingListWhereInput,
+        },
         select: {
+          id: true,
           order: true,
         },
       });
 
-      if (item && item.order !== input.newOrder) {
+      const itemMoving = items.find((i) => i.id === input.id);
+      const newOrder =
+        input.precedingId == null
+          ? 0
+          : (items.find((i) => i.id === input.precedingId)?.order ?? -1) + 1;
+
+      if (itemMoving && itemMoving.order !== newOrder) {
         await ctx.prisma.shoppingListItem.updateMany({
           where: {
             order: {
-              gt: item.order,
+              gt: itemMoving.order,
             },
           },
           data: {
@@ -113,7 +132,7 @@ export const shoppingListRouter = router({
         await ctx.prisma.shoppingListItem.updateMany({
           where: {
             order: {
-              gte: input.newOrder,
+              gte: newOrder,
             },
           },
           data: {
@@ -128,7 +147,7 @@ export const shoppingListRouter = router({
             id: input.id,
           },
           data: {
-            order: input.newOrder,
+            order: newOrder,
           },
         });
       }

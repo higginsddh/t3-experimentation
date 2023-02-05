@@ -28,7 +28,13 @@ export function ShoppingListExistingItems({
           return old;
         }
 
-        return localReorder(old, oldItemIndex, args.newOrder);
+        let newOrder = 0;
+        if (args.precedingId !== null) {
+          newOrder =
+            (old?.find((o) => o.id === args.precedingId)?.order ?? -1) + 1;
+        }
+
+        return localReorder(old, oldItemIndex, newOrder);
       });
 
       return { previousData };
@@ -51,10 +57,13 @@ export function ShoppingListExistingItems({
     <>
       <DragDropContext
         onDragEnd={(result) => {
-          if (typeof result.destination?.index === "number") {
+          if (typeof result.destination?.index === "number" && items) {
             reorder({
               id: result.draggableId,
-              newOrder: result.destination.index,
+              precedingId:
+                result.destination.index === 0
+                  ? null
+                  : items[result.destination.index - 1]?.id ?? null,
             });
           }
         }}
