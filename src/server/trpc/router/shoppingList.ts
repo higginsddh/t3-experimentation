@@ -108,7 +108,7 @@ export const shoppingListRouter = router({
           order: true,
         },
       });
-
+      // test
       const itemMoving = items.find((i) => i.id === input.id);
       const newOrder =
         input.precedingId == null
