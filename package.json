@@ -7,7 +7,8 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest"
   },
   "dependencies": {
     "@emotion/css": "^11.10.5",
@@ -45,7 +46,8 @@
     "eslint-config-next": "13.2.3",
     "prettier": "^2.8.4",
     "prisma": "^4.11.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "vitest": "^0.29.2"
   },
   "ct3aMetadata": {
     "initVersion": "6.8.0"

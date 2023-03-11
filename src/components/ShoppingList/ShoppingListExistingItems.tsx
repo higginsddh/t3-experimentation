@@ -3,6 +3,7 @@ import { ShoppingListExistingItem } from "./ShoppingListItem";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { trpc } from "../../utils/trpc";
 import { ShoppingListDeleteItems } from "./ShoppingListDeleteItems";
+import { getReorderedItems } from "./ShoppingListExistingItems.functions";
 
 export function ShoppingListExistingItems({
   items,
@@ -19,22 +20,7 @@ export function ShoppingListExistingItems({
       const previousData = utils.shoppingList.getAll.getData();
 
       utils.shoppingList.getAll.setData(undefined, (old) => {
-        if (!old) {
-          return old;
-        }
-
-        const oldItemIndex = old?.findIndex((o) => o.id === args.id);
-        if (oldItemIndex === -1) {
-          return old;
-        }
-
-        let newOrder = 0;
-        if (args.precedingId !== null) {
-          newOrder =
-            (old?.find((o) => o.id === args.precedingId)?.order ?? -1) + 1;
-        }
-
-        return localReorder(old, oldItemIndex, newOrder);
+        return getReorderedItems(args, old);
       });
 
       return { previousData };
@@ -84,15 +70,4 @@ export function ShoppingListExistingItems({
       <ShoppingListDeleteItems items={items} />
     </>
   );
-}
-
-function localReorder<T>(list: Array<T>, startIndex: number, endIndex: number) {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-
-  if (removed) {
-    result.splice(endIndex, 0, removed);
-  }
-
-  return result;
 }
