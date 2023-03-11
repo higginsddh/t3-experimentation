@@ -68,6 +68,7 @@ export function ShoppingListCreate() {
             size={"lg"}
             component="button"
             type="submit"
+            color="blue"
           >
             <IconPlus size={18} />
           </ActionIcon>
