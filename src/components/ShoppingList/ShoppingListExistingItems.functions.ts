@@ -26,6 +26,7 @@ function getNewOrder(
   if (args.precedingId !== null) {
     newOrder = (old?.find((o) => o.id === args.precedingId)?.order ?? -1) + 1;
   }
+
   return newOrder;
 }
 
@@ -34,6 +35,10 @@ function localReorder<T>(list: Array<T>, startIndex: number, endIndex: number) {
   const [removed] = result.splice(startIndex, 1);
 
   if (removed) {
+    if (endIndex > startIndex) {
+      endIndex -= 1;
+    }
+
     result.splice(endIndex, 0, removed);
   }
 
