@@ -1,5 +1,5 @@
 import { ActionIcon } from "@mantine/core";
-import { IconPlus } from "@tabler/icons";
+import { IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import type { ShoppingListItemValues } from "./ShoppingListItemForm";

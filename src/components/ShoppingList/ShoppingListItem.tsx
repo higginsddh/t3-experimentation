@@ -1,6 +1,6 @@
 import { Center } from "@mantine/core";
 import type { ShoppingListItem } from "@prisma/client";
-import { IconGripVertical } from "@tabler/icons";
+import { IconGripVertical } from "@tabler/icons-react";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import type { ShoppingListItemValues } from "./ShoppingListItemForm";
