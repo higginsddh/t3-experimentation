@@ -1,6 +1,6 @@
-import { ActionIcon } from "@mantine/core";
+import { Center } from "@mantine/core";
 import type { ShoppingListItem } from "@prisma/client";
-import { IconArrowsMoveVertical } from "@tabler/icons";
+import { IconGripVertical } from "@tabler/icons";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import type { ShoppingListItemValues } from "./ShoppingListItemForm";
@@ -71,11 +71,9 @@ export function ShoppingListExistingItem({
             <ShoppingListItemForm
               showPurchasedCheckbox
               icon={
-                <div {...provided.dragHandleProps}>
-                  <ActionIcon variant="filled" size={"lg"}>
-                    <IconArrowsMoveVertical size={18} />
-                  </ActionIcon>
-                </div>
+                <Center {...provided.dragHandleProps}>
+                  <IconGripVertical size="1.2rem" />
+                </Center>
               }
               values={itemValues}
               onValuesChange={(newValues) => {
