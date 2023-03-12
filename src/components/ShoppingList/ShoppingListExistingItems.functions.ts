@@ -8,38 +8,29 @@ export function getReorderedItems(
     return old;
   }
 
-  const oldItemIndex = old?.findIndex((o) => o.id === args.id);
-  if (oldItemIndex === -1) {
-    return old;
-  }
+  const result = localReorder(old, args.id, args.precedingId);
 
-  const newOrder = getNewOrder(args, old);
-
-  return localReorder(old, oldItemIndex, newOrder);
+  return result;
 }
 
-function getNewOrder(
-  args: { id: string; precedingId: string | null },
-  old: ShoppingListItem[] | undefined
+function localReorder(
+  list: Array<ShoppingListItem>,
+  id: string,
+  precedingJobId: string | null
 ) {
-  let newOrder = 0;
-  if (args.precedingId !== null) {
-    newOrder = (old?.find((o) => o.id === args.precedingId)?.order ?? -1) + 1;
-  }
+  let result = Array.from(list);
+  const item = result.find((i) => i.id === id);
 
-  return newOrder;
-}
+  if (item) {
+    result = result.filter((i) => i.id !== id);
 
-function localReorder<T>(list: Array<T>, startIndex: number, endIndex: number) {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-
-  if (removed) {
-    if (endIndex > startIndex) {
-      endIndex -= 1;
+    if (precedingJobId === null) {
+      result = [item, ...result];
+    } else {
+      const precedingJobIndex =
+        (result.findIndex((i) => i.id === precedingJobId) ?? -1) + 1;
+      result.splice(precedingJobIndex, 0, item);
     }
-
-    result.splice(endIndex, 0, removed);
   }
 
   return result.map((item, index) => ({

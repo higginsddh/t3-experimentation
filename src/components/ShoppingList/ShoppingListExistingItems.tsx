@@ -44,12 +44,22 @@ export function ShoppingListExistingItems({
       <DragDropContext
         onDragEnd={(result) => {
           if (typeof result.destination?.index === "number" && items) {
+            if (result.source.index === result.destination.index) {
+              return;
+            }
+
+            let precedingId: string | null;
+            if (result.destination.index === 0) {
+              precedingId = null;
+            } else if (result.source.index > result.destination.index) {
+              precedingId = items[result.destination.index - 1]?.id ?? null;
+            } else {
+              precedingId = items[result.destination.index]?.id ?? null;
+            }
+
             reorder({
               id: result.draggableId,
-              precedingId:
-                result.destination.index === 0
-                  ? null
-                  : items[result.destination.index - 1]?.id ?? null,
+              precedingId,
             });
           }
         }}
