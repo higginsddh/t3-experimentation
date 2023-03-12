@@ -6,6 +6,7 @@ import { trpc } from "../../utils/trpc";
 import type { ShoppingListItemValues } from "./ShoppingListItemForm";
 import { ShoppingListItemForm } from "./ShoppingListItemForm";
 import { Draggable } from "react-beautiful-dnd";
+import { NonBlockingLoader } from "../NonBlockingLoader";
 
 export function ShoppingListExistingItem({
   item,
@@ -21,43 +22,44 @@ export function ShoppingListExistingItem({
   });
   const utils = trpc.useContext();
 
-  const { mutate: updateItem } = trpc.shoppingList.updateItem.useMutation({
-    async onMutate(updatedItem) {
-      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-      await utils.shoppingList.getAll.cancel();
+  const { mutate: updateItem, isLoading } =
+    trpc.shoppingList.updateItem.useMutation({
+      async onMutate(updatedItem) {
+        // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+        await utils.shoppingList.getAll.cancel();
 
-      const previousData = utils.shoppingList.getAll.getData();
+        const previousData = utils.shoppingList.getAll.getData();
 
-      utils.shoppingList.getAll.setData(undefined, (old) =>
-        !old
-          ? old
-          : old.map((o) => {
-              if (o.id === updatedItem.id) {
-                return {
-                  ...o,
-                  ...updatedItem,
-                };
-              } else {
-                return o;
-              }
-            })
-      );
+        utils.shoppingList.getAll.setData(undefined, (old) =>
+          !old
+            ? old
+            : old.map((o) => {
+                if (o.id === updatedItem.id) {
+                  return {
+                    ...o,
+                    ...updatedItem,
+                  };
+                } else {
+                  return o;
+                }
+              })
+        );
 
-      return { previousData };
-    },
+        return { previousData };
+      },
 
-    onSettled: () => {
-      utils.shoppingList.getAll.invalidate();
-    },
+      onSettled: () => {
+        utils.shoppingList.getAll.invalidate();
+      },
 
-    onError(err, newItem, ctx) {
-      // If the mutation fails, use the context-value from onMutate
-      utils.shoppingList.getAll.setData(
-        undefined,
-        () => ctx?.previousData ?? []
-      );
-    },
-  });
+      onError(err, newItem, ctx) {
+        // If the mutation fails, use the context-value from onMutate
+        utils.shoppingList.getAll.setData(
+          undefined,
+          () => ctx?.previousData ?? []
+        );
+      },
+    });
 
   return (
     <>
@@ -87,6 +89,8 @@ export function ShoppingListExistingItem({
           </div>
         )}
       </Draggable>
+
+      {isLoading ? <NonBlockingLoader /> : null}
     </>
   );
 }
