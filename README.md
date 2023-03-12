@@ -12,10 +12,9 @@ For case sensitivity issues, use Developer Command Prompt and ensure folder has 
 
 Plan:
 
-- Show save indicator when updating quantity or text
 - Fix Remove Checked items not removing all items
 - Add recipes and get to feature parity
-- Update quantities
+  - Update quantities
 - Add login with invitation
 - Integration with Alexa
 - Share recipes
