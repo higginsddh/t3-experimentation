@@ -4,6 +4,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { trpc } from "../../utils/trpc";
 import { ShoppingListDeleteItems } from "./ShoppingListDeleteItems";
 import { getReorderedItems } from "./ShoppingListExistingItems.functions";
+import { NonBlockingLoader } from "../NonBlockingLoader";
 
 export function ShoppingListExistingItems({
   items,
@@ -12,7 +13,7 @@ export function ShoppingListExistingItems({
 }) {
   const utils = trpc.useContext();
 
-  const { mutate: reorder } = trpc.shoppingList.reorder.useMutation({
+  const { mutate: reorder, isLoading } = trpc.shoppingList.reorder.useMutation({
     async onMutate(args) {
       // Cancel outgoing fetches (so they don't overwrite our optimistic update)
       await utils.shoppingList.getAll.cancel();
@@ -77,7 +78,10 @@ export function ShoppingListExistingItems({
           )}
         </Droppable>
       </DragDropContext>
+
       <ShoppingListDeleteItems items={items} />
+
+      {isLoading ? <NonBlockingLoader /> : null}
     </>
   );
 }
