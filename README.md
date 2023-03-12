@@ -15,6 +15,7 @@ Plan:
 - Fix Remove Checked items not removing all items
 - Add recipes and get to feature parity
   - Update quantities
+- Real time updates
 - Add login with invitation
 - Integration with Alexa
 - Share recipes
