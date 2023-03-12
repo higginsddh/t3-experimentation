@@ -63,12 +63,16 @@ export function ShoppingListItemForm({
       {!hideQuantity ? (
         <NumberInput
           value={values.quantity}
-          onChange={(e) =>
+          onChange={(e) => {
+            if (e === "") {
+              e = 1;
+            }
+
             onValuesChange({
               ...values,
               quantity: e ?? 1,
-            })
-          }
+            });
+          }}
           required
           max={99}
           min={1}
