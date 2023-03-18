@@ -12,6 +12,7 @@ export function ShoppingListExistingItems({
   items: Array<ShoppingListItem>;
 }) {
   const utils = trpc.useContext();
+  console.log(items);
 
   const { mutate: reorder, isLoading } = trpc.shoppingList.reorder.useMutation({
     async onMutate(args) {

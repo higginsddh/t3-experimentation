@@ -10,6 +10,8 @@ import {
   Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const HEADER_HEIGHT = 60;
 
@@ -97,25 +99,20 @@ interface HeaderResponsiveProps {
 }
 
 export function NavBar({ links }: HeaderResponsiveProps) {
-  const [opened, { toggle, close }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0] ? links[0].link : "");
+  const [opened, { toggle,  }] = useDisclosure(false);
   const { classes, cx } = useStyles();
+  const router = useRouter();
 
   const items = links.map((link) => (
-    <a
+    <Link
       key={link.label}
       href={link.link}
       className={cx(classes.link, {
-        [classes.linkActive]: active === link.link,
+        [classes.linkActive]: router.pathname === link.link,
       })}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(link.link);
-        close();
-      }}
     >
       {link.label}
-    </a>
+    </Link>
   ));
 
   return (
