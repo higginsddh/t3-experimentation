@@ -99,7 +99,7 @@ interface HeaderResponsiveProps {
 }
 
 export function NavBar({ links }: HeaderResponsiveProps) {
-  const [opened, { toggle,  }] = useDisclosure(false);
+  const [opened, { toggle }] = useDisclosure(false);
   const { classes, cx } = useStyles();
   const router = useRouter();
 
@@ -110,13 +110,14 @@ export function NavBar({ links }: HeaderResponsiveProps) {
       className={cx(classes.link, {
         [classes.linkActive]: router.pathname === link.link,
       })}
+      onClick={toggle}
     >
       {link.label}
     </Link>
   ));
 
   return (
-    <Header height={HEADER_HEIGHT} mb={50} className={classes.root}>
+    <Header height={HEADER_HEIGHT} mb={20} className={classes.root}>
       <Container className={classes.header}>
         <Text fz="xl">Food Organizer</Text>
         <Group spacing={5} className={classes.links}>

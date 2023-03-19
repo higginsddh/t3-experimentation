@@ -1,44 +1,24 @@
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Card,
-  Container,
-  Group,
-  Text,
-} from "@mantine/core";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { Button, Container, Group } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { type NextPage } from "next";
+import { CreateRecipe } from "../components/Recipes/CreateRecipe";
+import { RecipeList } from "../components/Recipes/RecipeList";
 
 const Recipes: NextPage = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
     <>
       <Container>
-        <Card withBorder>
-          <Group position="apart" mb="xs">
-            <Text weight={500}>Brown butter cod</Text>
-            <Group spacing="xs">
-              <ActionIcon>
-                <IconEdit />
-              </ActionIcon>
-              <ActionIcon>
-                <IconTrash />
-              </ActionIcon>
-            </Group>
-          </Group>
-          <Group>This is a recipe from Blue Apron.</Group>
-          <Group position="apart">
-            <Group>
-              <Badge color="red" variant="light">
-                Seafood
-              </Badge>
-            </Group>
-            <Button size="sm" variant="light">
-              Add to shopping list
-            </Button>
-          </Group>
-        </Card>
+        <Group position="right" mb="md">
+          <Button color="blue" onClick={open}>
+            Add Recipe
+          </Button>
+        </Group>
+        <RecipeList />
       </Container>
+
+      {opened ? <CreateRecipe onClose={close} /> : null}
     </>
   );
 };
