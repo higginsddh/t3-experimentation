@@ -1,7 +1,7 @@
-import type { ShoppingListItem } from "@prisma/client";
 import { Affix, Button } from "@mantine/core";
 import { trpc } from "../../utils/trpc";
 import { NonBlockingLoader } from "../NonBlockingLoader";
+import { ShoppingListItem } from "./ShoppingListItemType";
 
 export function ShoppingListDeleteItems({
   items,

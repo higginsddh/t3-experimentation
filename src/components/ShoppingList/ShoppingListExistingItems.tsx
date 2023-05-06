@@ -1,10 +1,11 @@
-import type { ShoppingListItem } from "@prisma/client";
+// import type { ShoppingListItem } from "@prisma/client";
 import { ShoppingListExistingItem } from "./ShoppingListItem";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { trpc } from "../../utils/trpc";
 import { ShoppingListDeleteItems } from "./ShoppingListDeleteItems";
 import { getReorderedItems } from "./ShoppingListExistingItems.functions";
 import { NonBlockingLoader } from "../NonBlockingLoader";
+import { ShoppingListItem } from "./ShoppingListItemType";
 
 export function ShoppingListExistingItems({
   items,
