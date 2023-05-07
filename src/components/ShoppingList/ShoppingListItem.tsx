@@ -1,6 +1,5 @@
-import React from "react";
 import { Center } from "@mantine/core";
-// import type { ShoppingListItem } from "@prisma/client";
+import type { ShoppingListItem } from "@prisma/client";
 import { IconGripVertical } from "@tabler/icons-react";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
@@ -8,7 +7,6 @@ import type { ShoppingListItemValues } from "./ShoppingListItemForm";
 import { ShoppingListItemForm } from "./ShoppingListItemForm";
 import { Draggable } from "react-beautiful-dnd";
 import { NonBlockingLoader } from "../NonBlockingLoader";
-import { ShoppingListItem } from "./ShoppingListItemType";
 
 export function ShoppingListExistingItem({
   item,

@@ -1,6 +1,4 @@
-// import type { ShoppingListItem } from "@prisma/client";
-
-import { ShoppingListItem } from "./ShoppingListItemType";
+import type { ShoppingListItem } from "@prisma/client";
 
 export function getReorderedItems(
   args: { id: string; precedingId: string | null },
