@@ -1,0 +1,60 @@
+.root {
+  position: relative;
+  z-index: 1;
+}
+
+.dropdown {
+  position: absolute;
+  top: 60;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top-width: 0;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.link {
+  display: block;
+  line-height: 1;
+  padding: 8px 12px;
+  /* borderRadius: theme.radius.sm, */
+  text-decoration: none;
+  /* color:
+       theme.colorScheme === "dark"
+         ? theme.colors.dark[0]
+         : theme.colors.gray[7],
+     fontSize: theme.fontSizes.sm, */
+  font-weight: 500;
+  /* 
+     "&:hover": {
+       backgroundColor:
+         theme.colorScheme === "dark"
+           ? theme.colors.dark[6]
+           : theme.colors.gray[0],
+     },
+
+     [theme.fn.smallerThan("sm")]: {
+       borderRadius: 0,
+       padding: theme.spacing.md,
+     }, */
+}
+
+/* .linkActive {
+             "&, &:hover": {
+               backgroundColor: theme.fn.variant({
+                 variant: "light",
+                 color: theme.primaryColor,
+               }).background,
+               color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
+                 .color,
+             },
+} */

@@ -3,6 +3,7 @@ import type { DocumentContext, DocumentInitialProps } from "next/document";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { resetServerContext } from "react-beautiful-dnd";
 import { createStylesServer, ServerStyles } from "@mantine/next";
+import { ColorSchemeScript } from "@mantine/core";
 
 const stylesServer = createStylesServer();
 
@@ -28,7 +29,9 @@ export default class _Document extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head>
+          <ColorSchemeScript defaultColorScheme="auto" />
+        </Head>
         <body>
           <Main />
           <NextScript />
