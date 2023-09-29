@@ -12,65 +12,7 @@ import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const HEADER_HEIGHT = 60;
-
-// const useStyles = createStyles((theme) => ({
-//   header: {
-//     display: "flex",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     height: "100%",
-//   },
-
-//   links: {
-//     [theme.fn.smallerThan("sm")]: {
-//       display: "none",
-//     },
-//   },
-
-//   burger: {
-//     [theme.fn.largerThan("sm")]: {
-//       display: "none",
-//     },
-//   },
-
-//   link: {
-//     display: "block",
-//     lineHeight: 1,
-//     padding: "8px 12px",
-//     borderRadius: theme.radius.sm,
-//     textDecoration: "none",
-//     color:
-//       theme.colorScheme === "dark"
-//         ? theme.colors.dark[0]
-//         : theme.colors.gray[7],
-//     fontSize: theme.fontSizes.sm,
-//     fontWeight: 500,
-
-//     "&:hover": {
-//       backgroundColor:
-//         theme.colorScheme === "dark"
-//           ? theme.colors.dark[6]
-//           : theme.colors.gray[0],
-//     },
-
-//     [theme.fn.smallerThan("sm")]: {
-//       borderRadius: 0,
-//       padding: theme.spacing.md,
-//     },
-//   },
-
-//   linkActive: {
-//     "&, &:hover": {
-//       backgroundColor: theme.fn.variant({
-//         variant: "light",
-//         color: theme.primaryColor,
-//       }).background,
-//       color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-//         .color,
-//     },
-//   },
-// }));
+import classes from "./NavBar.module.css";
 
 interface HeaderResponsiveProps {
   links: { link: string; label: string }[];
@@ -84,9 +26,8 @@ export function NavBar({ links }: HeaderResponsiveProps) {
     <Link
       key={link.label}
       href={link.link}
-      // className={cx(classes.link, {
-      //   [classes.linkActive]: router.pathname === link.link,
-      // })}
+      className={classes.link}
+      data-active={router.pathname === link.link || undefined}
       onClick={toggle}
     >
       {link.label}
@@ -94,32 +35,14 @@ export function NavBar({ links }: HeaderResponsiveProps) {
   ));
 
   return (
-    <AppShell.Header mb={20} className={"root"}>
-      <Container className={"header"}>
+    <header className={classes.header}>
+      <Container size="md" className={classes.inner}>
         <Text fz="xl">Food Organizer</Text>
-        <Group gap="lg" className={"links"} visibleFrom="md">
+        <Group gap={5} visibleFrom="xs">
           {items}
         </Group>
-        <Burger
-          opened={opened}
-          onClick={toggle}
-          className={"burger"}
-          size="sm"
-          hiddenFrom="md"
-        />
-        <Transition transition="pop-top-right" duration={200} mounted={opened}>
-          {(styles) => (
-            <Paper
-              className={"dropdown"}
-              hiddenFrom="md"
-              withBorder
-              style={styles}
-            >
-              {items}
-            </Paper>
-          )}
-        </Transition>
+        <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
       </Container>
-    </AppShell.Header>
+    </header>
   );
 }

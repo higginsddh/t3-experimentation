@@ -66,6 +66,8 @@ export function ShoppingListItemForm({
           onChange={(e) => {
             if (e === "") {
               e = 1;
+            } else if (typeof e === "string") {
+              e = parseInt(e);
             }
 
             onValuesChange({

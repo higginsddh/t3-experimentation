@@ -1,4 +1,4 @@
-import { TextInput, Button, Group, Modal } from "@mantine/core";
+import { TextInput, Button, Group, Modal, Flex } from "@mantine/core";
 import { Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
@@ -25,11 +25,11 @@ export function CreateRecipe({ onClose }: { onClose: () => void }) {
             {...form.getInputProps("title")}
           />
 
-          <Group position="right" mt="md">
+          <Flex justify="flex-end" mt="md">
             <Button color="blue" type="submit">
               Save
             </Button>
-          </Group>
+          </Flex>
         </form>
       </Modal>
     </>

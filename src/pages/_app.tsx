@@ -6,8 +6,7 @@ import Head from "next/head";
 import { NavBar } from "../components/NavBar";
 
 import { trpc } from "../utils/trpc";
-import type { AppProps } from "next/app";
-import { AppShell, MantineProvider, createTheme } from "@mantine/core";
+import { MantineProvider, createTheme } from "@mantine/core";
 
 import "@mantine/core/styles.css";
 import "../styles/globals.css";
@@ -118,23 +117,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <meta name="description" content="Help plan food for the week." />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <AppShell header={{ height: 60 }}>
-          <NavBar
-            links={[
-              {
-                link: "/",
-                label: "Shopping List",
-              },
-              {
-                link: "/recipes",
-                label: "Recipes",
-              },
-            ]}
-          />
-          <AppShell.Main>
-            <Component {...pageProps} />
-          </AppShell.Main>
-        </AppShell>
+        <NavBar
+          links={[
+            {
+              link: "/",
+              label: "Shopping List",
+            },
+            {
+              link: "/recipes",
+              label: "Recipes",
+            },
+          ]}
+        />
+        <Component {...pageProps} />
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </MantineProvider>
     </SessionProvider>

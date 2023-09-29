@@ -1,60 +1,37 @@
-.root {
-  position: relative;
-  z-index: 1;
-}
-
-.dropdown {
-  position: absolute;
-  top: 60;
-  left: 0;
-  right: 0;
-  z-index: 0;
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-  border-top-width: 0;
-  overflow: hidden;
-}
-
 .header {
+  height: rem(56px);
+  margin-bottom: rem(30px);
+  background-color: var(--mantine-color-body);
+  border-bottom: rem(1px) solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.inner {
+  height: rem(56px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
 }
 
 .link {
   display: block;
   line-height: 1;
-  padding: 8px 12px;
-  /* borderRadius: theme.radius.sm, */
+  padding: rem(8px) rem(12px);
+  border-radius: var(--mantine-radius-sm);
   text-decoration: none;
-  /* color:
-       theme.colorScheme === "dark"
-         ? theme.colors.dark[0]
-         : theme.colors.gray[7],
-     fontSize: theme.fontSizes.sm, */
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  font-size: var(--mantine-font-size-sm);
   font-weight: 500;
-  /* 
-     "&:hover": {
-       backgroundColor:
-         theme.colorScheme === "dark"
-           ? theme.colors.dark[6]
-           : theme.colors.gray[0],
-     },
 
-     [theme.fn.smallerThan("sm")]: {
-       borderRadius: 0,
-       padding: theme.spacing.md,
-     }, */
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
+
+  [data-mantine-color-scheme] &[data-active] {
+    background-color: var(--mantine-color-blue-filled);
+    color: var(--mantine-color-white);
+  }
 }
-
-/* .linkActive {
-             "&, &:hover": {
-               backgroundColor: theme.fn.variant({
-                 variant: "light",
-                 color: theme.primaryColor,
-               }).background,
-               color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-                 .color,
-             },
-} */

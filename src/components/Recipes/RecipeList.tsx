@@ -1,32 +1,40 @@
-import { ActionIcon, Badge, Button, Card, Group, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Group,
+  Text,
+} from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 
 export function RecipeList() {
   return (
     <>
       <Card withBorder>
-        <Group position="apart" mb="xs">
-          <Text weight={500}>Brown butter cod</Text>
-          <Group spacing="xs">
-            <ActionIcon>
+        <Flex justify="space-between" mb="xs">
+          <Text fw={500}>Brown butter cod</Text>
+          <Group gap="xs">
+            <ActionIcon variant="subtle" color="gray">
               <IconEdit />
             </ActionIcon>
-            <ActionIcon>
+            <ActionIcon variant="subtle" color="gray">
               <IconTrash />
             </ActionIcon>
           </Group>
-        </Group>
+        </Flex>
         <Group mb="xs">This is a recipe from Blue Apron.</Group>
-        <Group position="apart">
+        <Flex justify="space-between">
           <Group>
             <Badge color="red" variant="light">
               Seafood
             </Badge>
           </Group>
-          <Button size="xs" variant="light">
+          <Button size="xs" variant="light" radius="lg">
             Add to shopping list
           </Button>
-        </Group>
+        </Flex>
       </Card>
     </>
   );

@@ -14,7 +14,9 @@ const ShoppingList: React.FC = () => {
 
   return (
     <div style={{ position: "relative" }}>
-      {isLoadingItems ? <LoadingOverlay visible overlayBlur={2} /> : null}
+      {isLoadingItems ? (
+        <LoadingOverlay visible overlayProps={{ blur: 2 }} />
+      ) : null}
 
       {isErrorFetchingItems ? (
         <ErrorLoadingItems />

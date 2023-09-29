@@ -1,4 +1,4 @@
-import { Button, Container, Group } from "@mantine/core";
+import { Button, Container, Flex, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type NextPage } from "next";
 import { CreateRecipe } from "../components/Recipes/CreateRecipe";
@@ -10,11 +10,11 @@ const Recipes: NextPage = () => {
   return (
     <>
       <Container>
-        <Group position="right" mb="md">
+        <Flex justify="flex-end" mb="md">
           <Button color="blue" onClick={open}>
             Add Recipe
           </Button>
-        </Group>
+        </Flex>
         <RecipeList />
       </Container>
 
