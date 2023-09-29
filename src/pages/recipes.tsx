@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Group } from "@mantine/core";
+import { Button, Container, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type NextPage } from "next";
 import { CreateRecipe } from "../components/Recipes/CreateRecipe";

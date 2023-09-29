@@ -1,5 +1,4 @@
-import { TextInput, Button, Group, Modal, Flex } from "@mantine/core";
-import { Select } from "@mantine/core";
+import { TextInput, Button, Modal, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 export function CreateRecipe({ onClose }: { onClose: () => void }) {

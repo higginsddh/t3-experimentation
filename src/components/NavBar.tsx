@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Container,
   Group,
@@ -6,7 +5,6 @@ import {
   Paper,
   Transition,
   Text,
-  AppShell,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
