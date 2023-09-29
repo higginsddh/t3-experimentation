@@ -32,7 +32,7 @@ export function ShoppingListItemForm({
           checked={values.purchased ?? false}
           styles={{
             root: {
-              alignSelf: "flex-end",
+              alignSelf: "center",
               width: "20px",
             },
           }}

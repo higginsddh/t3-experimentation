@@ -33,7 +33,7 @@ export function ShoppingListDeleteItems({
         // If the mutation fails, use the context-value from onMutate
         utils.shoppingList.getAll.setData(
           undefined,
-          () => ctx?.previousData ?? []
+          () => ctx?.previousData ?? [],
         );
       },
     });
@@ -52,6 +52,7 @@ export function ShoppingListDeleteItems({
               itemsToDelete,
             })
           }
+          color="red"
         >
           Remove Checked Items
         </Button>
