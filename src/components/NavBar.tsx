@@ -42,7 +42,17 @@ export function NavBar({ links }: HeaderResponsiveProps) {
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
-            <Paper className={classes.dropdown} withBorder style={styles}>
+            <Paper
+              className={classes.dropdown}
+              withBorder
+              style={{
+                ...styles,
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0,
+                borderTopWidth: 0,
+              }}
+              hiddenFrom="xs"
+            >
               {items}
             </Paper>
           )}

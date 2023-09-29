@@ -42,8 +42,8 @@
   left: 0;
   right: 0;
   z-index: 5;
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
   border-top-width: 0;
   overflow: hidden;
 }
