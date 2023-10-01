@@ -1,4 +1,4 @@
-import { TextInput, Button, Modal, Flex } from "@mantine/core";
+import { TextInput, Button, Modal, Flex, TagsInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 export function CreateRecipe({ onClose }: { onClose: () => void }) {
@@ -22,6 +22,12 @@ export function CreateRecipe({ onClose }: { onClose: () => void }) {
             label="Title"
             width={"100%"}
             {...form.getInputProps("title")}
+          />
+
+          <TagsInput
+            {...form.getInputProps("tags")}
+            label="Tags"
+            data={["Seafood", "Vegetarian"]}
           />
 
           <Flex justify="flex-end" mt="md">

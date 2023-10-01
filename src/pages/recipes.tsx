@@ -1,7 +1,7 @@
 import { Button, Container, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type NextPage } from "next";
-import { CreateRecipe } from "../components/Recipes/CreateRecipe";
+import { CreateRecipe } from "../components/Recipes/ReceiptForm";
 import { RecipeList } from "../components/Recipes/RecipeList";
 
 const Recipes: NextPage = () => {
