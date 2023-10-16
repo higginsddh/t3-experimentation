@@ -1,11 +1,7 @@
-import type { ShoppingListItem } from "@prisma/client";
 import { ShoppingListExistingItem } from "./ShoppingListItem";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { trpc } from "../../utils/trpc";
 import { ShoppingListDeleteItems } from "./ShoppingListDeleteItems";
-import { getReorderedItems } from "./ShoppingListExistingItems.functions";
-import { NonBlockingLoader } from "../NonBlockingLoader";
-import { ShoppingListItemLive } from "../liveblocks.config";
+import type { ShoppingListItemLive } from "../liveblocks.config";
 
 export function ShoppingListExistingItems({
   items,
@@ -48,14 +44,14 @@ export function ShoppingListExistingItems({
               return;
             }
 
-            let precedingId: string | null;
-            if (result.destination.index === 0) {
-              precedingId = null;
-            } else if (result.source.index > result.destination.index) {
-              precedingId = items[result.destination.index - 1]?.id ?? null;
-            } else {
-              precedingId = items[result.destination.index]?.id ?? null;
-            }
+            // let precedingId: string | null;
+            // if (result.destination.index === 0) {
+            //   precedingId = null;
+            // } else if (result.source.index > result.destination.index) {
+            //   precedingId = items[result.destination.index - 1]?.id ?? null;
+            // } else {
+            //   precedingId = items[result.destination.index]?.id ?? null;
+            // }
 
             // reorder({
             //   id: result.draggableId,
