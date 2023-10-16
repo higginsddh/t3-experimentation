@@ -5,41 +5,39 @@ import { trpc } from "../../utils/trpc";
 import { ShoppingListDeleteItems } from "./ShoppingListDeleteItems";
 import { getReorderedItems } from "./ShoppingListExistingItems.functions";
 import { NonBlockingLoader } from "../NonBlockingLoader";
+import { ShoppingListItemLive } from "../liveblocks.config";
 
 export function ShoppingListExistingItems({
   items,
 }: {
-  items: Array<ShoppingListItem>;
+  items: Array<ShoppingListItemLive>;
 }) {
-  const utils = trpc.useContext();
-  console.log(items);
+  // const { mutate: reorder, isLoading } = trpc.shoppingList.reorder.useMutation({
+  //   async onMutate(args) {
+  //     // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+  //     await utils.shoppingList.getAll.cancel();
 
-  const { mutate: reorder, isLoading } = trpc.shoppingList.reorder.useMutation({
-    async onMutate(args) {
-      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-      await utils.shoppingList.getAll.cancel();
+  //     const previousData = utils.shoppingList.getAll.getData();
 
-      const previousData = utils.shoppingList.getAll.getData();
+  //     utils.shoppingList.getAll.setData(undefined, (old) => {
+  //       return getReorderedItems(args, old);
+  //     });
 
-      utils.shoppingList.getAll.setData(undefined, (old) => {
-        return getReorderedItems(args, old);
-      });
+  //     return { previousData };
+  //   },
 
-      return { previousData };
-    },
+  //   onSettled: () => {
+  //     utils.shoppingList.getAll.invalidate();
+  //   },
 
-    onSettled: () => {
-      utils.shoppingList.getAll.invalidate();
-    },
-
-    onError(err, newItem, ctx) {
-      // If the mutation fails, use the context-value from onMutate
-      utils.shoppingList.getAll.setData(
-        undefined,
-        () => ctx?.previousData ?? []
-      );
-    },
-  });
+  //   onError(err, newItem, ctx) {
+  //     // If the mutation fails, use the context-value from onMutate
+  //     utils.shoppingList.getAll.setData(
+  //       undefined,
+  //       () => ctx?.previousData ?? []
+  //     );
+  //   },
+  // });
 
   return (
     <>
@@ -59,10 +57,10 @@ export function ShoppingListExistingItems({
               precedingId = items[result.destination.index]?.id ?? null;
             }
 
-            reorder({
-              id: result.draggableId,
-              precedingId,
-            });
+            // reorder({
+            //   id: result.draggableId,
+            //   precedingId,
+            // });
           }
         }}
       >
@@ -81,8 +79,6 @@ export function ShoppingListExistingItems({
       </DragDropContext>
 
       <ShoppingListDeleteItems items={items} />
-
-      {isLoading ? <NonBlockingLoader /> : null}
     </>
   );
 }
