@@ -5,39 +5,41 @@ import { trpc } from "../../utils/trpc";
 import { ShoppingListDeleteItems } from "./ShoppingListDeleteItems";
 import { getReorderedItems } from "./ShoppingListExistingItems.functions";
 import { NonBlockingLoader } from "../NonBlockingLoader";
-import { ShoppingListItemLive } from "../liveblocks.config";
 
 export function ShoppingListExistingItems({
   items,
 }: {
-  items: Array<ShoppingListItemLive>;
+  items: Array<ShoppingListItem>;
 }) {
-  // const { mutate: reorder, isLoading } = trpc.shoppingList.reorder.useMutation({
-  //   async onMutate(args) {
-  //     // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-  //     await utils.shoppingList.getAll.cancel();
+  const utils = trpc.useContext();
+  console.log(items);
 
-  //     const previousData = utils.shoppingList.getAll.getData();
+  const { mutate: reorder, isLoading } = trpc.shoppingList.reorder.useMutation({
+    async onMutate(args) {
+      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+      await utils.shoppingList.getAll.cancel();
 
-  //     utils.shoppingList.getAll.setData(undefined, (old) => {
-  //       return getReorderedItems(args, old);
-  //     });
+      const previousData = utils.shoppingList.getAll.getData();
 
-  //     return { previousData };
-  //   },
+      utils.shoppingList.getAll.setData(undefined, (old) => {
+        return getReorderedItems(args, old);
+      });
 
-  //   onSettled: () => {
-  //     utils.shoppingList.getAll.invalidate();
-  //   },
+      return { previousData };
+    },
 
-  //   onError(err, newItem, ctx) {
-  //     // If the mutation fails, use the context-value from onMutate
-  //     utils.shoppingList.getAll.setData(
-  //       undefined,
-  //       () => ctx?.previousData ?? []
-  //     );
-  //   },
-  // });
+    onSettled: () => {
+      utils.shoppingList.getAll.invalidate();
+    },
+
+    onError(err, newItem, ctx) {
+      // If the mutation fails, use the context-value from onMutate
+      utils.shoppingList.getAll.setData(
+        undefined,
+        () => ctx?.previousData ?? []
+      );
+    },
+  });
 
   return (
     <>
@@ -57,10 +59,10 @@ export function ShoppingListExistingItems({
               precedingId = items[result.destination.index]?.id ?? null;
             }
 
-            // reorder({
-            //   id: result.draggableId,
-            //   precedingId,
-            // });
+            reorder({
+              id: result.draggableId,
+              precedingId,
+            });
           }
         }}
       >
@@ -79,6 +81,8 @@ export function ShoppingListExistingItems({
       </DragDropContext>
 
       <ShoppingListDeleteItems items={items} />
+
+      {isLoading ? <NonBlockingLoader /> : null}
     </>
   );
 }

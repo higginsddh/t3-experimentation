@@ -5,9 +5,6 @@ import { trpc } from "../../utils/trpc";
 import { NonBlockingLoader } from "../NonBlockingLoader";
 import type { ShoppingListItemValues } from "./ShoppingListItemForm";
 import { ShoppingListItemForm } from "./ShoppingListItemForm";
-import { ShoppingListItemLive, useMutation } from "../liveblocks.config";
-import { LiveObject } from "@liveblocks/client";
-import { v4 as uuidv4 } from "uuid";
 
 const newItemDefaultValues = {
   text: "",
@@ -20,31 +17,50 @@ export function ShoppingListCreate() {
     useState<ShoppingListItemValues>(newItemDefaultValues);
   const utils = trpc.useContext();
 
-  const addItemToLiveBlock = useMutation(
-    ({ storage }, newValues: ShoppingListItemValues) => {
-      const shoppingListToUpdate = storage.get("shoppingList");
+  const { mutate: addItem, isLoading } = trpc.shoppingList.addItem.useMutation({
+    async onMutate(newItem) {
+      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+      await utils.shoppingList.getAll.cancel();
 
-      shoppingListToUpdate.insert(
-        new LiveObject<ShoppingListItemLive>({
-          id: uuidv4(),
-          text: newValues.text,
-          purchased: newValues.purchased ?? false,
-          quantity: newValues.quantity,
-        }),
-        0,
-      );
+      const previousData = utils.shoppingList.getAll.getData();
+
+      newItemCount++;
+      utils.shoppingList.getAll.setData(undefined, (old) => [
+        {
+          id: `newitem${newItemCount}`,
+          order: 0,
+          purchased: false,
+          ...newItem,
+        },
+        ...(old ?? []),
+      ]);
 
       setNewItemValues(newItemDefaultValues);
+
+      return { previousData };
     },
-    [],
-  );
+
+    onSettled: () => {
+      utils.shoppingList.getAll.invalidate();
+    },
+
+    onError(err, newItem, ctx) {
+      setNewItemValues(newItem);
+
+      // If the mutation fails, use the context-value from onMutate
+      utils.shoppingList.getAll.setData(
+        undefined,
+        () => ctx?.previousData ?? []
+      );
+    },
+  });
 
   return (
     <>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          addItemToLiveBlock(newItemValues);
+          addItem(newItemValues);
         }}
       >
         <ShoppingListItemForm
@@ -64,6 +80,8 @@ export function ShoppingListCreate() {
           hideQuantity
         />
       </form>
+
+      {isLoading ? <NonBlockingLoader /> : null}
     </>
   );
 }
