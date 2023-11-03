@@ -1,6 +1,8 @@
+import type { ShoppingListItem } from "@prisma/client";
 import { Affix, Button } from "@mantine/core";
-import type { ShoppingListItemLive } from "../liveblocks.config";
-import { useMutation } from "../liveblocks.config";
+import { trpc } from "../../utils/trpc";
+import { NonBlockingLoader } from "../NonBlockingLoader";
+import { ShoppingListItemLive, useMutation } from "../liveblocks.config";
 
 export function ShoppingListDeleteItems({
   items,

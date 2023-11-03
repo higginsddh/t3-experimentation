@@ -1,7 +1,10 @@
-import { Container } from "@mantine/core";
+export const dynamic = "force-dynamic";
+
+import { Container, LoadingOverlay } from "@mantine/core";
 import { type NextPage } from "next";
 import ShoppingList from "../components/ShoppingList";
 import { ShoppingListContext } from "../components/ShoppingList/ShoppingListContext";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   return (

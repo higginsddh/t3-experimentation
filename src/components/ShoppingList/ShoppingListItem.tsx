@@ -4,8 +4,11 @@ import { useState } from "react";
 import type { ShoppingListItemValues } from "./ShoppingListItemForm";
 import { ShoppingListItemForm } from "./ShoppingListItemForm";
 import { Draggable } from "react-beautiful-dnd";
-import type { ShoppingListItemLive } from "../liveblocks.config";
-import { useMutation } from "../liveblocks.config";
+import {
+  ShoppingListItemLive,
+  useMutation,
+  useStorage,
+} from "../liveblocks.config";
 
 export function ShoppingListExistingItem({
   item,

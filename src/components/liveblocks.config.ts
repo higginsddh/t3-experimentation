@@ -1,5 +1,4 @@
-import type { LiveList } from "@liveblocks/client";
-import { LiveObject, createClient } from "@liveblocks/client";
+import { LiveList, LiveObject, createClient } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
 import { env } from "../env/client.mjs";
 import { useEffect } from "react";
@@ -44,4 +43,4 @@ export function getPersistedListFromLocalStorage() {
 }
 
 export const { RoomProvider, useOthers, useMutation, useStorage, useRoom } =
-  createRoomContext<Record<string, never>, Storage>(client);
+  createRoomContext<{}, Storage>(client);
