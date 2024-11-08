@@ -16,13 +16,11 @@ import ReceipeFormIngredients, {
 export function CreateRecipe({ onClose }: { onClose: () => void }) {
   const form = useForm<{
     title: string;
-    tags: Array<string>;
-    ingredients: Array<Ingredient>;
   }>({
     initialValues: {
       title: "",
-      tags: [],
-      ingredients: [{ id: "", name: "" }],
+      // tags: [],
+      // ingredients: [{ id: "", name: "" }],
     },
   });
 
@@ -42,7 +40,7 @@ export function CreateRecipe({ onClose }: { onClose: () => void }) {
               {...form.getInputProps("title")}
             />
 
-            <ReceipeFormIngredients {...form.getInputProps("ingredients")} />
+            {/* <ReceipeFormIngredients {...form.getInputProps("ingredients")} /> */}
 
             <FileInput label="Photo" placeholder="Select photo of receipt" />
 

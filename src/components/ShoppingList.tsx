@@ -1,17 +1,19 @@
 import React from "react";
-import { trpc } from "../utils/trpc";
 import { LoadingOverlay } from "@mantine/core";
 import { ErrorLoadingItems } from "./ShoppingList/ErrorLoadingItems";
 import { ShoppingListCreate } from "./ShoppingList/ShoppingListCreate";
 import { ShoppingListExistingItems } from "./ShoppingList/ShoppingListExistingItems";
+import { ShoppingListItem } from "../models/ShoppingListItem";
 
 const ShoppingList: React.FC = () => {
-  const {
-    data: items,
-    isInitialLoading: isLoadingItems,
-    isError: isErrorFetchingItems,
-  } = trpc.shoppingList.getAll.useQuery(undefined, {});
-
+  // const {
+  //   data: items,
+  //   isInitialLoading: isLoadingItems,
+  //   isError: isErrorFetchingItems,
+  // } = trpc.shoppingList.getAll.useQuery(undefined, {});
+  const isLoadingItems = false;
+  const isErrorFetchingItems = false;
+  const items: Array<ShoppingListItem> = [];
   return (
     <div style={{ position: "relative" }}>
       {isLoadingItems ? (
