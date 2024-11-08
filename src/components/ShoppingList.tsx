@@ -3,14 +3,13 @@ import { LoadingOverlay } from "@mantine/core";
 import { ErrorLoadingItems } from "./ShoppingList/ErrorLoadingItems";
 import { ShoppingListCreate } from "./ShoppingList/ShoppingListCreate";
 import { ShoppingListExistingItems } from "./ShoppingList/ShoppingListExistingItems";
-import { ShoppingListItem } from "../models/ShoppingListItem";
-import {
-  addRxPlugin,
+import type { ShoppingListItem } from "../models/ShoppingListItem";
+import { addRxPlugin, toTypedRxJsonSchema } from "rxdb";
+import type {
   ExtractDocumentTypeFromTypedRxJsonSchema,
   RxCollection,
   RxDatabase,
   RxJsonSchema,
-  toTypedRxJsonSchema,
 } from "rxdb";
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { createRxDatabase } from "rxdb";
@@ -49,7 +48,11 @@ export type HeroDocType = ExtractDocumentTypeFromTypedRxJsonSchema<
 // create the typed RxJsonSchema from the literal typed object.
 export const heroSchema: RxJsonSchema<HeroDocType> = shoppingListSchema;
 
-export type ShoppingListCollection = RxCollection<HeroDocType, {}, {}>;
+export type ShoppingListCollection = RxCollection<
+  HeroDocType,
+  unknown,
+  unknown
+>;
 export type MyDatabaseCollections = {
   shoppinglist: ShoppingListCollection;
 };
@@ -79,7 +82,7 @@ const ShoppingList: React.FC = () => {
         },
       });
 
-      const myDocument = await myDatabase.shoppinglist.insert({
+      await myDatabase.shoppinglist.insert({
         id: "todo2",
         text: "Test Item",
         quantity: 2,

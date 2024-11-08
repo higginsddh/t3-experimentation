@@ -1,6 +1,6 @@
 import { Affix, Button } from "@mantine/core";
 import { NonBlockingLoader } from "../NonBlockingLoader";
-import { ShoppingListItem } from "../../models/ShoppingListItem";
+import type { ShoppingListItem } from "../../models/ShoppingListItem";
 
 export function ShoppingListDeleteItems({
   items,

@@ -5,7 +5,7 @@ import type { ShoppingListItemValues } from "./ShoppingListItemForm";
 import { ShoppingListItemForm } from "./ShoppingListItemForm";
 import { Draggable } from "react-beautiful-dnd";
 import { NonBlockingLoader } from "../NonBlockingLoader";
-import { ShoppingListItem } from "../../models/ShoppingListItem";
+import type { ShoppingListItem } from "../../models/ShoppingListItem";
 
 export function ShoppingListExistingItem({
   item,

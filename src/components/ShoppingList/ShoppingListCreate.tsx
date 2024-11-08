@@ -10,7 +10,7 @@ const newItemDefaultValues = {
   quantity: 1,
 };
 
-let newItemCount = 0;
+// let newItemCount = 0;
 export function ShoppingListCreate() {
   const [newItemValues, setNewItemValues] =
     useState<ShoppingListItemValues>(newItemDefaultValues);
