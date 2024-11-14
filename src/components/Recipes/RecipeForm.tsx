@@ -9,9 +9,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import ReceipeFormIngredients, {
-  type Ingredient,
-} from "./RecipeFormIngredients";
+import { type Ingredient } from "./RecipeFormIngredients";
 
 export function CreateRecipe({ onClose }: { onClose: () => void }) {
   const form = useForm<{
@@ -42,7 +40,7 @@ export function CreateRecipe({ onClose }: { onClose: () => void }) {
               {...form.getInputProps("title")}
             />
 
-            <ReceipeFormIngredients {...form.getInputProps("ingredients")} />
+            {/* <ReceipeFormIngredients {...form.getInputProps("ingredients")} /> */}
 
             <FileInput label="Photo" placeholder="Select photo of receipt" />
 
