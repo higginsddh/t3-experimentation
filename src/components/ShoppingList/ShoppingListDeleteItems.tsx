@@ -1,40 +1,42 @@
+import type { ShoppingListItem } from "@prisma/client";
 import { Affix, Button } from "@mantine/core";
+import { trpc } from "../../utils/trpc";
 import { NonBlockingLoader } from "../NonBlockingLoader";
-import type { ShoppingListItem } from "../../models/ShoppingListItem";
 
 export function ShoppingListDeleteItems({
   items,
 }: {
   items: Array<ShoppingListItem>;
 }) {
-  // const { mutate: deleteItems, isLoading } =
-  //   trpc.shoppingList.deleteItems.useMutation({
-  //     async onMutate(args) {
-  //       // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-  //       await utils.shoppingList.getAll.cancel();
+  const utils = trpc.useContext();
 
-  //       const previousData = utils.shoppingList.getAll.getData();
+  const { mutate: deleteItems, isLoading } =
+    trpc.shoppingList.deleteItems.useMutation({
+      async onMutate(args) {
+        // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+        await utils.shoppingList.getAll.cancel();
 
-  //       utils.shoppingList.getAll.setData(undefined, (old) => {
-  //         return old?.filter((o) => !args.itemsToDelete.includes(o.id));
-  //       });
+        const previousData = utils.shoppingList.getAll.getData();
 
-  //       return { previousData };
-  //     },
+        utils.shoppingList.getAll.setData(undefined, (old) => {
+          return old?.filter((o) => !args.itemsToDelete.includes(o.id));
+        });
 
-  //     onSettled: () => {
-  //       utils.shoppingList.getAll.invalidate();
-  //     },
+        return { previousData };
+      },
 
-  //     onError(err, newItem, ctx) {
-  //       // If the mutation fails, use the context-value from onMutate
-  //       utils.shoppingList.getAll.setData(
-  //         undefined,
-  //         () => ctx?.previousData ?? [],
-  //       );
-  //     },
-  //   });
-  const isLoading = false;
+      onSettled: () => {
+        utils.shoppingList.getAll.invalidate();
+      },
+
+      onError(err, newItem, ctx) {
+        // If the mutation fails, use the context-value from onMutate
+        utils.shoppingList.getAll.setData(
+          undefined,
+          () => ctx?.previousData ?? [],
+        );
+      },
+    });
 
   const itemsToDelete = items.filter((i) => i.purchased).map((i) => i.id);
   if (itemsToDelete.length === 0) {
@@ -45,11 +47,11 @@ export function ShoppingListDeleteItems({
     <>
       <Affix position={{ bottom: 20, left: 20 }}>
         <Button
-          onClick={() => {
-            // deleteItems({
-            //   itemsToDelete,
-            // });
-          }}
+          onClick={() =>
+            deleteItems({
+              itemsToDelete,
+            })
+          }
           color="red"
         >
           Remove Checked Items
