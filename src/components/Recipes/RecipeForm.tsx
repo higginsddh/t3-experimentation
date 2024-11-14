@@ -9,18 +9,18 @@ import {
   Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import ReceipeFormIngredients, {
-  type Ingredient,
-} from "./RecipeFormIngredients";
+import { type Ingredient } from "./RecipeFormIngredients";
 
 export function CreateRecipe({ onClose }: { onClose: () => void }) {
   const form = useForm<{
     title: string;
+    tags: Array<string>;
+    ingredients: Array<Ingredient>;
   }>({
     initialValues: {
       title: "",
-      // tags: [],
-      // ingredients: [{ id: "", name: "" }],
+      tags: [],
+      ingredients: [{ id: "", name: "" }],
     },
   });
 

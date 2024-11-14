@@ -1,4 +1,4 @@
-import { ShoppingListItem } from "../../models/ShoppingListItem";
+import type { ShoppingListItem } from "../../models/ShoppingListItem";
 
 export function getReorderedItems(
   args: { id: string; precedingId: string | null },

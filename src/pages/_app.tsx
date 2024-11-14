@@ -11,7 +11,7 @@ const theme = createTheme({
   /** Put your mantine theme override here */
 });
 
-const MyApp: AppType<{}> = ({ Component, pageProps: pageProps }) => {
+const MyApp: AppType = ({ Component, pageProps: pageProps }) => {
   return (
     <MantineProvider theme={theme}>
       <Head>
