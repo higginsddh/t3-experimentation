@@ -21,7 +21,7 @@ const config = {
   // Disable strict mode so react beautiful dnd warnings don't fire
   // https://github.com/atlassian/react-beautiful-dnd/issues/2396
   // reactStrictMode: true,
-  // swcMinify: true,
+  swcMinify: true,
   i18n: {
     locales: ["en"],
     defaultLocale: "en",

@@ -11,11 +11,13 @@ export function ShoppingListItemForm({
   values,
   onValuesChange,
   showPurchasedCheckbox,
+  hideQuantity,
 }: {
   icon: JSX.Element;
   values: ShoppingListItemValues;
   onValuesChange(args: ShoppingListItemValues): void;
   showPurchasedCheckbox?: boolean;
+  hideQuantity?: boolean;
 }) {
   return (
     <Flex columnGap={"md"} mb="sm">
@@ -58,33 +60,35 @@ export function ShoppingListItemForm({
         }}
       />
 
-      <NumberInput
-        value={values.quantity}
-        onChange={(e) => {
-          if (e === "") {
-            e = 1;
-          } else if (typeof e === "string") {
-            e = parseInt(e);
-          }
+      {!hideQuantity ? (
+        <NumberInput
+          value={values.quantity}
+          onChange={(e) => {
+            if (e === "") {
+              e = 1;
+            } else if (typeof e === "string") {
+              e = parseInt(e);
+            }
 
-          onValuesChange({
-            ...values,
-            quantity: e ?? 1,
-          });
-        }}
-        required
-        max={99}
-        min={1}
-        aria-label="Shopping list quantity"
-        styles={{
-          input: {
-            textDecoration: values.purchased ? "line-through" : undefined,
-          },
-          root: {
-            width: "65px",
-          },
-        }}
-      />
+            onValuesChange({
+              ...values,
+              quantity: e ?? 1,
+            });
+          }}
+          required
+          max={99}
+          min={1}
+          aria-label="Shopping list quantity"
+          styles={{
+            input: {
+              textDecoration: values.purchased ? "line-through" : undefined,
+            },
+            root: {
+              width: "65px",
+            },
+          }}
+        />
+      ) : null}
 
       {icon}
     </Flex>

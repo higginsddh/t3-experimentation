@@ -1,8 +1,8 @@
-import type { ShoppingListItem } from "../../models/ShoppingListItem";
+import type { ShoppingListItem } from "@prisma/client";
 
 export function getReorderedItems(
   args: { id: string; precedingId: string | null },
-  old: ShoppingListItem[] | undefined,
+  old: ShoppingListItem[] | undefined
 ) {
   if (!old) {
     return old;
@@ -16,7 +16,7 @@ export function getReorderedItems(
 function localReorder(
   list: Array<ShoppingListItem>,
   id: string,
-  precedingJobId: string | null,
+  precedingJobId: string | null
 ) {
   let result = Array.from(list);
   const item = result.find((i) => i.id === id);
