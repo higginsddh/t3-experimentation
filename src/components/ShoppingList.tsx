@@ -22,11 +22,11 @@ const ShoppingList: React.FC = () => {
       cluster: "us2",
     });
 
-    var channel = pusher.subscribe("shopping-list");
+    const channel = pusher.subscribe("shopping-list");
     channel.bind("updated", function () {
       utils.shoppingList.getAll.invalidate();
     });
-  }, []);
+  }, [utils.shoppingList.getAll]);
 
   return (
     <div style={{ position: "relative" }}>
