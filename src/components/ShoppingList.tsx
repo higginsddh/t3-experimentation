@@ -1,9 +1,13 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { trpc } from "../utils/trpc";
 import { LoadingOverlay } from "@mantine/core";
 import { ErrorLoadingItems } from "./ShoppingList/ErrorLoadingItems";
 import { ShoppingListCreate } from "./ShoppingList/ShoppingListCreate";
 import { ShoppingListExistingItems } from "./ShoppingList/ShoppingListExistingItems";
+import Pusher from "pusher-js";
+import { env } from "../env/client.mjs";
 
 const ShoppingList: React.FC = () => {
   const {
@@ -11,6 +15,18 @@ const ShoppingList: React.FC = () => {
     isInitialLoading: isLoadingItems,
     isError: isErrorFetchingItems,
   } = trpc.shoppingList.getAll.useQuery(undefined, {});
+
+  const utils = trpc.useContext();
+  useEffect(() => {
+    const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_ID, {
+      cluster: "us2",
+    });
+
+    var channel = pusher.subscribe("my-channel");
+    channel.bind("my-event", function () {
+      utils.shoppingList.getAll.invalidate();
+    });
+  }, []);
 
   return (
     <div style={{ position: "relative" }}>

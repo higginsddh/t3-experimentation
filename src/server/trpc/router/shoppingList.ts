@@ -1,6 +1,16 @@
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import { router, publicProcedure } from "../trpc";
+import Pusher from "pusher";
+import { env } from "../../../env/server.mjs";
+
+const pusher = new Pusher({
+  appId: env.PUSHER_APP_ID,
+  key: env.PUSHER_KEY,
+  secret: env.PUSHER_SECRET,
+  cluster: "us2",
+  useTLS: true,
+});
 
 const shoppingListBase = z.object({
   text: z.string(),
@@ -31,19 +41,25 @@ export const shoppingListRouter = router({
         },
       });
 
-      return await ctx.prisma.shoppingListItem.create({
+      const result = await ctx.prisma.shoppingListItem.create({
         data: {
           text: input.text,
           quantity: input.quantity,
           order: 0,
         },
       });
+
+      pusher.trigger("my-channel", "my-event", {
+        message: "hello world",
+      });
+
+      return result;
     }),
 
   updateItem: publicProcedure
     .input(shoppingListUpdate)
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.shoppingListItem.update({
+      const result = ctx.prisma.shoppingListItem.update({
         where: {
           id: input.id,
         },
@@ -51,6 +67,12 @@ export const shoppingListRouter = router({
           ...input,
         },
       });
+
+      pusher.trigger("my-channel", "my-event", {
+        message: "hello world",
+      });
+
+      return result;
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
@@ -67,7 +89,7 @@ export const shoppingListRouter = router({
     .input(
       z.object({
         itemsToDelete: z.array(z.string()),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       await ctx.prisma.shoppingListItem.deleteMany({
@@ -77,6 +99,10 @@ export const shoppingListRouter = router({
           },
         },
       });
+
+      pusher.trigger("my-channel", "my-event", {
+        message: "hello world",
+      });
     }),
 
   reorder: publicProcedure
@@ -84,7 +110,7 @@ export const shoppingListRouter = router({
       z.object({
         id: z.string(),
         precedingId: z.string().nullable(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const shoppingListWhereInput: Array<Prisma.ShoppingListItemWhereInput> = [
@@ -149,6 +175,10 @@ export const shoppingListRouter = router({
           data: {
             order: newOrder,
           },
+        });
+
+        pusher.trigger("my-channel", "my-event", {
+          message: "hello world",
         });
       }
     }),
