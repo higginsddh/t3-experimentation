@@ -49,16 +49,14 @@ export const shoppingListRouter = router({
         },
       });
 
-      pusher.trigger("my-channel", "my-event", {
-        message: "hello world",
-      });
+      await pusher.trigger("shopping-list", "updated", {});
 
       return result;
     }),
 
   updateItem: publicProcedure
     .input(shoppingListUpdate)
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const result = ctx.prisma.shoppingListItem.update({
         where: {
           id: input.id,
@@ -68,9 +66,7 @@ export const shoppingListRouter = router({
         },
       });
 
-      pusher.trigger("my-channel", "my-event", {
-        message: "hello world",
-      });
+      await pusher.trigger("shopping-list", "updated", {});
 
       return result;
     }),
@@ -100,9 +96,7 @@ export const shoppingListRouter = router({
         },
       });
 
-      pusher.trigger("my-channel", "my-event", {
-        message: "hello world",
-      });
+      await pusher.trigger("shopping-list", "updated", {});
     }),
 
   reorder: publicProcedure
@@ -177,9 +171,7 @@ export const shoppingListRouter = router({
           },
         });
 
-        pusher.trigger("my-channel", "my-event", {
-          message: "hello world",
-        });
+        await pusher.trigger("shopping-list", "updated", {});
       }
     }),
 });

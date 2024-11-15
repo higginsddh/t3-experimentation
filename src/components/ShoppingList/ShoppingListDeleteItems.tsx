@@ -53,6 +53,7 @@ export function ShoppingListDeleteItems({
             })
           }
           color="red"
+          variant="outline"
         >
           Remove Checked Items
         </Button>

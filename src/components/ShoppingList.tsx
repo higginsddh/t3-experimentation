@@ -22,8 +22,8 @@ const ShoppingList: React.FC = () => {
       cluster: "us2",
     });
 
-    var channel = pusher.subscribe("my-channel");
-    channel.bind("my-event", function () {
+    var channel = pusher.subscribe("shopping-list");
+    channel.bind("updated", function () {
       utils.shoppingList.getAll.invalidate();
     });
   }, []);
