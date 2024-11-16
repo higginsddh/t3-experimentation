@@ -1,7 +1,7 @@
 import { Center } from "@mantine/core";
 import type { ShoppingListItem } from "@prisma/client";
 import { IconGripVertical } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "../../utils/trpc";
 import type { ShoppingListItemValues } from "./ShoppingListItemForm";
 import { ShoppingListItemForm } from "./ShoppingListItemForm";
@@ -21,6 +21,27 @@ export function ShoppingListExistingItem({
     purchased: item.purchased,
   });
   const utils = trpc.useContext();
+
+  useEffect(() => {
+    setItemValues((v) => ({
+      ...v,
+      purchased: item.purchased,
+    }));
+  }, [item.purchased]);
+
+  useEffect(() => {
+    setItemValues((v) => ({
+      ...v,
+      text: item.text ?? "",
+    }));
+  }, [item.text]);
+
+  useEffect(() => {
+    setItemValues((v) => ({
+      ...v,
+      quantity: item.quantity,
+    }));
+  }, [item.quantity]);
 
   const { mutate: updateItem, isLoading } =
     trpc.shoppingList.updateItem.useMutation({
@@ -42,7 +63,7 @@ export function ShoppingListExistingItem({
                 } else {
                   return o;
                 }
-              })
+              }),
         );
 
         return { previousData };
@@ -56,7 +77,7 @@ export function ShoppingListExistingItem({
         // If the mutation fails, use the context-value from onMutate
         utils.shoppingList.getAll.setData(
           undefined,
-          () => ctx?.previousData ?? []
+          () => ctx?.previousData ?? [],
         );
       },
     });
