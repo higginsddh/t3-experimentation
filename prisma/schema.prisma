@@ -20,6 +20,16 @@ model ShoppingListItem {
   purchased Boolean @default(false)
 }
 
+model Recipe {
+  id        String  @id @default(cuid())
+  title      String
+  notes String
+  link String?
+  photo String?
+  ingredients Json
+  tags Json
+}
+
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
