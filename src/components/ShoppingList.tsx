@@ -6,8 +6,7 @@ import { LoadingOverlay } from "@mantine/core";
 import { ErrorLoadingItems } from "./ShoppingList/ErrorLoadingItems";
 import { ShoppingListCreate } from "./ShoppingList/ShoppingListCreate";
 import { ShoppingListExistingItems } from "./ShoppingList/ShoppingListExistingItems";
-import Pusher from "pusher-js";
-import { env } from "../env/client.mjs";
+import { clientPusher } from "../clientServices/clientPusher";
 
 const ShoppingList: React.FC = () => {
   const {
@@ -16,13 +15,9 @@ const ShoppingList: React.FC = () => {
     isError: isErrorFetchingItems,
   } = trpc.shoppingList.getAll.useQuery(undefined, {});
 
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
   useEffect(() => {
-    const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_ID, {
-      cluster: "us2",
-    });
-
-    const channel = pusher.subscribe("shopping-list");
+    const channel = clientPusher.subscribe("shopping-list");
     channel.bind("updated", function () {
       utils.shoppingList.getAll.invalidate();
     });

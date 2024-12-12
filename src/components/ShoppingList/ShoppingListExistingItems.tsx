@@ -11,7 +11,7 @@ export function ShoppingListExistingItems({
 }: {
   items: Array<ShoppingListItem>;
 }) {
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
   console.log(items);
 
   const { mutate: reorder, isLoading } = trpc.shoppingList.reorder.useMutation({
@@ -36,7 +36,7 @@ export function ShoppingListExistingItems({
       // If the mutation fails, use the context-value from onMutate
       utils.shoppingList.getAll.setData(
         undefined,
-        () => ctx?.previousData ?? []
+        () => ctx?.previousData ?? [],
       );
     },
   });

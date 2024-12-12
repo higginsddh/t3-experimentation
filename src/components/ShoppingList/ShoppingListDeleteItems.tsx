@@ -8,7 +8,7 @@ export function ShoppingListDeleteItems({
 }: {
   items: Array<ShoppingListItem>;
 }) {
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   const { mutate: deleteItems, isLoading } =
     trpc.shoppingList.deleteItems.useMutation({

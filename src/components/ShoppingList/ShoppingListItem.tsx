@@ -20,7 +20,7 @@ export function ShoppingListExistingItem({
     quantity: item.quantity,
     purchased: item.purchased,
   });
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   useEffect(() => {
     setItemValues((v) => ({

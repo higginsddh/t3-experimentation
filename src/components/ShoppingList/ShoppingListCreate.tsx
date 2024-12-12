@@ -15,7 +15,7 @@ let newItemCount = 0;
 export function ShoppingListCreate() {
   const [newItemValues, setNewItemValues] =
     useState<ShoppingListItemValues>(newItemDefaultValues);
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   const { mutate: addItem, isLoading } = trpc.shoppingList.addItem.useMutation({
     async onMutate(newItem) {
@@ -50,7 +50,7 @@ export function ShoppingListCreate() {
       // If the mutation fails, use the context-value from onMutate
       utils.shoppingList.getAll.setData(
         undefined,
-        () => ctx?.previousData ?? []
+        () => ctx?.previousData ?? [],
       );
     },
   });

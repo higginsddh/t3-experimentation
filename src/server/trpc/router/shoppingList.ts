@@ -1,16 +1,7 @@
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import { router, publicProcedure } from "../trpc";
-import Pusher from "pusher";
-import { env } from "../../../env/server.mjs";
-
-const pusher = new Pusher({
-  appId: env.PUSHER_APP_ID,
-  key: env.PUSHER_KEY,
-  secret: env.PUSHER_SECRET,
-  cluster: "us2",
-  useTLS: true,
-});
+import { serverPusher } from "../../serverPusher";
 
 const shoppingListBase = z.object({
   text: z.string(),
@@ -49,7 +40,7 @@ export const shoppingListRouter = router({
         },
       });
 
-      await pusher.trigger("shopping-list", "updated", {});
+      await serverPusher.trigger("shopping-list", "updated", {});
 
       return result;
     }),
@@ -57,7 +48,7 @@ export const shoppingListRouter = router({
   updateItem: publicProcedure
     .input(shoppingListUpdate)
     .mutation(async ({ input, ctx }) => {
-      const result = ctx.prisma.shoppingListItem.update({
+      await ctx.prisma.shoppingListItem.update({
         where: {
           id: input.id,
         },
@@ -66,9 +57,7 @@ export const shoppingListRouter = router({
         },
       });
 
-      await pusher.trigger("shopping-list", "updated", {});
-
-      return result;
+      await serverPusher.trigger("shopping-list", "updated", {});
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
@@ -96,7 +85,7 @@ export const shoppingListRouter = router({
         },
       });
 
-      await pusher.trigger("shopping-list", "updated", {});
+      await serverPusher.trigger("shopping-list", "updated", {});
     }),
 
   reorder: publicProcedure
@@ -171,7 +160,7 @@ export const shoppingListRouter = router({
           },
         });
 
-        await pusher.trigger("shopping-list", "updated", {});
+        await serverPusher.trigger("shopping-list", "updated", {});
       }
     }),
 });
