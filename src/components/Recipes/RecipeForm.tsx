@@ -7,42 +7,66 @@ import {
   Stack,
   FileInput,
   Textarea,
+  LoadingOverlay,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { type Ingredient } from "./RecipeFormIngredients";
+import type { RecipeBaseType } from "../../server/trpc/router/recipes";
 
-export function CreateRecipe({ onClose }: { onClose: () => void }) {
-  const form = useForm<{
-    title: string;
-    tags: Array<string>;
-    ingredients: Array<Ingredient>;
-  }>({
-    initialValues: {
-      title: "",
-      tags: [],
-      ingredients: [{ id: "", name: "" }],
-    },
+type FormData = {
+  title: string;
+  tags: Array<string>;
+  ingredients: Array<Ingredient>;
+  link: string;
+  notes: string;
+  photo: string;
+};
+
+export function RecipeForm({
+  initialValues,
+  onClose,
+  onSave,
+  saving,
+  errorMessage,
+}: {
+  initialValues: FormData;
+  onClose: () => void;
+  onSave: (values: RecipeBaseType) => void;
+  saving: boolean;
+  errorMessage: string | null;
+}) {
+  const form = useForm<FormData>({
+    initialValues,
   });
 
   return (
     <>
       <Modal opened={true} onClose={onClose} title="Add Recipe">
         <form
-          onSubmit={form.onSubmit((v) => {
-            console.log(v);
+          onSubmit={form.onSubmit(() => {
+            const values = form.getValues();
+            onSave({
+              ...values,
+              ingredients: values.ingredients.map((i) => i.name),
+            });
           })}
         >
+          {saving ? (
+            <LoadingOverlay visible overlayProps={{ blur: 2 }} />
+          ) : null}
+
           <Stack gap="sm">
             <TextInput
               withAsterisk
               label="Title"
-              width={"100%"}
+              required
               {...form.getInputProps("title")}
             />
 
             {/* <ReceipeFormIngredients {...form.getInputProps("ingredients")} /> */}
 
-            <FileInput label="Photo" placeholder="Select photo of receipt" />
+            <FileInput label="Photo" placeholder="Select photo of recipe" />
 
             <TagsInput
               {...form.getInputProps("tags")}
@@ -50,15 +74,29 @@ export function CreateRecipe({ onClose }: { onClose: () => void }) {
               data={["Seafood", "Vegetarian"]}
             />
 
-            <TextInput label="Link" type="url" />
+            <TextInput
+              label="Link"
+              type="url"
+              {...form.getInputProps("link")}
+            />
 
-            <Textarea label="Notes" />
+            <Textarea label="Notes" {...form.getInputProps("notes")} />
           </Stack>
 
-          <Flex justify="flex-end" mt="md">
-            <Button color="blue" type="submit">
-              Save
-            </Button>
+          <Flex justify="space-between" mt="md">
+            <div>
+              {(errorMessage ?? "") !== "" ? (
+                <Text c="red">{errorMessage}</Text>
+              ) : null}
+            </div>
+            <Flex justify="end" gap="md">
+              <Button color="gray" type="button" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button color="blue" type="submit">
+                Save
+              </Button>
+            </Flex>
           </Flex>
         </form>
       </Modal>

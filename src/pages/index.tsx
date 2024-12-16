@@ -1,6 +1,6 @@
 import { Container } from "@mantine/core";
 import { type NextPage } from "next";
-import ShoppingList from "../components/ShoppingList";
+import ShoppingList from "../components/ShoppingList/ShoppingList";
 
 const Home: NextPage = () => {
   return (

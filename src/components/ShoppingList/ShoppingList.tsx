@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { LoadingOverlay } from "@mantine/core";
-import { ErrorLoadingItems } from "./ShoppingList/ErrorLoadingItems";
-import { ShoppingListCreate } from "./ShoppingList/ShoppingListCreate";
-import { ShoppingListExistingItems } from "./ShoppingList/ShoppingListExistingItems";
-import { clientPusher } from "../clientServices/clientPusher";
+import { ErrorLoadingItems } from "./ErrorLoadingItems";
+import { ShoppingListCreate } from "./ShoppingListCreate";
+import { ShoppingListExistingItems } from "./ShoppingListExistingItems";
+import { clientPusher } from "../../clientServices/clientPusher";
 
 const ShoppingList: React.FC = () => {
   const {

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
 
 const recipeBase = z.object({
-  title: z.string(),
+  title: z.string().min(1),
   notes: z.string(),
   link: z.string().optional(),
   photo: z.string().optional(),
@@ -10,20 +10,34 @@ const recipeBase = z.object({
   tags: z.array(z.string()),
 });
 
-const recipeUpdate = recipeBase
-  .extend({
-    id: z.string(),
-  })
-  .partial({
-    title: true,
-    notes: true,
-    link: true,
-    photo: true,
-    ingredients: true,
-    tags: true,
-  });
+export type RecipeBaseType = z.infer<typeof recipeBase>;
+
+const recipeExisting = recipeBase.extend({
+  id: z.string(),
+});
+
+const recipeUpdate = recipeExisting.partial({
+  title: true,
+  notes: true,
+  link: true,
+  photo: true,
+  ingredients: true,
+  tags: true,
+});
 
 export const recipeRouter = router({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const recipes = await ctx.prisma.recipe.findMany({
+      orderBy: [
+        {
+          title: "asc",
+        },
+      ],
+    });
+
+    return recipes as Array<z.infer<typeof recipeExisting>>;
+  }),
+
   addRecipe: publicProcedure
     .input(recipeBase)
     .mutation(async ({ input, ctx }) => {
