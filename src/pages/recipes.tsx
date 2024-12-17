@@ -1,8 +1,8 @@
 import { Button, Container, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type NextPage } from "next";
-import { RecipeForm } from "../components/Recipes/RecipeForm";
 import { RecipeList } from "../components/Recipes/RecipeList";
+import { RecipeFormCreate } from "../components/Recipes/RecipeFormCreate";
 
 const Recipes: NextPage = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -18,7 +18,7 @@ const Recipes: NextPage = () => {
         <RecipeList />
       </Container>
 
-      {opened ? <RecipeForm onClose={close} /> : null}
+      {opened ? <RecipeFormCreate onClose={close} /> : null}
     </>
   );
 };

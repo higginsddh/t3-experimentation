@@ -1,3 +1,5 @@
+"use client";
+
 import {
   TextInput,
   Button,
@@ -11,8 +13,11 @@ import {
   Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { type Ingredient } from "./RecipeFormIngredients";
+import ReceipeFormIngredients, {
+  type Ingredient,
+} from "./RecipeFormIngredients";
 import type { RecipeBaseType } from "../../server/trpc/router/recipes";
+import { useState } from "react";
 
 type FormData = {
   title: string;
@@ -39,7 +44,11 @@ export function RecipeForm({
   const form = useForm<FormData>({
     initialValues,
   });
+  const [ingredients, setIngredients] = useState<Array<Ingredient>>(
+    initialValues.ingredients,
+  );
 
+  form.watch("ingredients", (v) => setIngredients(v.value));
   return (
     <>
       <Modal opened={true} onClose={onClose} title="Add Recipe">
@@ -64,7 +73,14 @@ export function RecipeForm({
               {...form.getInputProps("title")}
             />
 
-            {/* <ReceipeFormIngredients {...form.getInputProps("ingredients")} /> */}
+            <ReceipeFormIngredients
+              value={ingredients}
+              onChange={(v) =>
+                form.setValues({
+                  ingredients: v,
+                })
+              }
+            />
 
             <FileInput label="Photo" placeholder="Select photo of recipe" />
 

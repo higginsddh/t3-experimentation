@@ -1,6 +1,8 @@
 import { ActionIcon, Flex, Input, TextInput } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useRef } from "react";
+import { v4 } from "uuid";
+
 export type Ingredient = {
   id: string;
   name: string;
@@ -8,8 +10,8 @@ export type Ingredient = {
 
 export default function ReceipeFormIngredients({
   value,
-} // onChange,
-: {
+  onChange,
+}: {
   value: Array<Ingredient>;
   onChange: (newValue: Array<Ingredient>) => void;
 }) {
@@ -20,7 +22,7 @@ export default function ReceipeFormIngredients({
       <div ref={containerRef}>
         <Input.Label>Ingredients</Input.Label>
         {value.map((field) => (
-          <Flex gap={"sm"} align={"center"} key={field.id}>
+          <Flex gap={"sm"} mt={"md"} align={"center"} key={field.id}>
             <div
               style={{
                 flexGrow: 1,
@@ -28,54 +30,29 @@ export default function ReceipeFormIngredients({
             >
               <TextInput
                 rightSection={
-                  <ActionIcon variant="default">
-                    <IconTrash />
-                  </ActionIcon>
+                  value.length > 1 ? (
+                    <ActionIcon
+                      variant="default"
+                      onClick={() => {
+                        onChange(value.filter((v) => v.id !== field.id));
+                      }}
+                    >
+                      <IconTrash />
+                    </ActionIcon>
+                  ) : null
                 }
               />
             </div>
 
-            <ActionIcon variant="default">
+            <ActionIcon
+              variant="default"
+              onClick={() => {
+                onChange([...value, { id: v4(), name: "" }]);
+              }}
+            >
               <IconPlus />
             </ActionIcon>
           </Flex>
-          //   <div className="input-group mb-3" key={field.id}>
-          //     <input
-          //       className="form-control"
-          //     //   onKeyDown={(e) => {
-          //     //     if (e.key === "Enter") {
-          //     //       e.preventDefault();
-          //     //       insertNewItem(insert, index, containerRef);
-          //     //     }
-          //     //   }}
-          //     //   {...register(getInputElementName(index))}
-          //     />
-          //     <Button
-          //       className="me-2"
-          //       color="secondary"
-          //       type="button"
-          //       onClick={() => insertNewItem(insert, index, containerRef)}
-          //     >
-          //       <FontAwesomeIcon icon={faPlus} />
-          //     </Button>
-
-          //     <Button
-          //       color="secondary"
-          //       type="button"
-          //       onClick={() => {
-          //         if (fields.length > 1) {
-          //           remove(index);
-          //         } else {
-          //           update(index, {
-          //             ...field,
-          //             name: "",
-          //           });
-          //         }
-          //       }}
-          //     >
-          //       <FontAwesomeIcon icon={faTrash} />
-          //     </Button>
-          //   </div>
         ))}
       </div>
     </>
@@ -109,8 +86,4 @@ export default function ReceipeFormIngredients({
 //       }
 //     });
 //   });
-// }
-
-// function getInputElementName(index: number): `ingredients.${number}.name` {
-//   return `ingredients.${index}.name`;
 // }
