@@ -1,5 +1,4 @@
 import { type inferAsyncReturnType } from "@trpc/server";
-import { type Session } from "next-auth";
 
 import { prisma } from "../db/client";
 
