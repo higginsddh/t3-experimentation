@@ -3,7 +3,7 @@ import { type inferAsyncReturnType } from "@trpc/server";
 import { prisma } from "../db/client";
 
 type CreateContextOptions = {
-  session: Session | null;
+  session: null;
 };
 
 /** Use this helper for:
