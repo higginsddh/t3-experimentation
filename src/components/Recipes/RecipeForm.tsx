@@ -23,6 +23,7 @@ import type { RecipeBaseType } from "../../server/trpc/router/recipes";
 import { useEffect, useRef, useState } from "react";
 import { env } from "../../env/client.mjs";
 import { ImagePreview } from "./ImagePreview";
+import { NonBlockingLoader } from "../NonBlockingLoader";
 
 type FormData = {
   title: string;
@@ -130,9 +131,7 @@ export function RecipeForm({
             }
           })}
         >
-          {saving ? (
-            <LoadingOverlay visible overlayProps={{ blur: 2 }} />
-          ) : null}
+          {saving ? <NonBlockingLoader /> : null}
 
           <Stack gap="sm">
             <TextInput

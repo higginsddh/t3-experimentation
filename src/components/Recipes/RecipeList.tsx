@@ -21,6 +21,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { RecipeFormUpdate } from "./RecipeFormUpdate";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { env } from "../../env/client.mjs";
+import { NonBlockingLoader } from "../NonBlockingLoader";
 
 export function RecipeList() {
   const {
@@ -28,6 +29,14 @@ export function RecipeList() {
     isInitialLoading: isLoadingItems,
     isError: isErrorFetchingItems,
   } = trpc.recipes.getAll.useQuery(undefined, {});
+  const utils = trpc.useUtils();
+
+  const { mutate: addToShoppingList, isLoading: addingItems } =
+    trpc.recipes.addToShoppingList.useMutation({
+      onSettled: () => {
+        utils.shoppingList.getAll.invalidate();
+      },
+    });
 
   const cld = new Cloudinary({
     cloud: {
@@ -37,6 +46,8 @@ export function RecipeList() {
 
   return (
     <>
+      {addingItems ? <NonBlockingLoader /> : null}
+
       {isLoadingItems ? (
         <LoadingOverlay visible overlayProps={{ blur: 2 }} />
       ) : null}
@@ -97,7 +108,16 @@ export function RecipeList() {
                       </Badge>
                     ))}
                   </Group>
-                  <Button size="xs" variant="light" radius="lg">
+                  <Button
+                    size="xs"
+                    variant="light"
+                    radius="lg"
+                    onClick={() => {
+                      addToShoppingList({
+                        id: item.id,
+                      });
+                    }}
+                  >
                     Add to shopping list
                   </Button>
                 </Flex>
