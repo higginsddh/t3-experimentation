@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
+import type { Prisma, PrismaClient } from "@prisma/client";
+import { env } from "../../../env/server.mjs";
+import cloudinary from "cloudinary";
 
 const recipeBase = z.object({
   title: z.string().min(1),
@@ -51,6 +54,20 @@ export const recipeRouter = router({
   updateRecipe: publicProcedure
     .input(recipeUpdate)
     .mutation(async ({ input, ctx }) => {
+      const originalItem = await ctx.prisma.recipe.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (
+        input.photo === null ||
+        input.photo === "" ||
+        input.photo !== originalItem?.photo
+      ) {
+        await deleteImageIfSet(ctx.prisma, input);
+      }
+
       await ctx.prisma.recipe.update({
         where: {
           id: input.id,
@@ -64,16 +81,41 @@ export const recipeRouter = router({
   deleteRecipe: publicProcedure
     .input(
       z.object({
-        itemsToDelete: z.array(z.string()),
+        id: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      await deleteImageIfSet(ctx.prisma, input);
+
       await ctx.prisma.recipe.deleteMany({
         where: {
           id: {
-            in: input.itemsToDelete,
+            equals: input.id,
           },
         },
       });
     }),
 });
+
+async function deleteImageIfSet(
+  prismaClient: PrismaClient<Prisma.PrismaClientOptions, never>,
+  input: {
+    id: string;
+  },
+) {
+  const originalItem = await prismaClient.recipe.findFirst({
+    where: {
+      id: input.id,
+    },
+  });
+
+  if (originalItem?.photo) {
+    cloudinary.v2.config({
+      cloud_name: env.CLOUDINARY_CLOUD_NAME,
+      api_key: env.CLOUDINARY_KEY,
+      api_secret: env.CLOUDINARY_SECRET,
+    });
+
+    await cloudinary.v2.uploader.destroy(originalItem.photo);
+  }
+}

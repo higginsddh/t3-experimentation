@@ -11,6 +11,9 @@ export const serverSchema = z.object({
   PUSHER_APP_ID: z.string(),
   PUSHER_KEY: z.string(),
   PUSHER_SECRET: z.string(),
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  CLOUDINARY_KEY: z.string(),
+  CLOUDINARY_SECRET: z.string(),
   // NEXTAUTH_SECRET: z.string(),
   // NEXTAUTH_URL: z.preprocess(
   //   // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
@@ -28,6 +31,8 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_PUSHER_ID: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
 });
 
 /**
@@ -38,4 +43,8 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_PUSHER_ID: process.env.NEXT_PUBLIC_PUSHER_ID,
+  NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
 };

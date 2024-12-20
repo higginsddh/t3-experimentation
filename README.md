@@ -19,3 +19,9 @@ Plan:
 - Add login with invitation
 - Integration with Alexa
 - Share recipes
+
+To Figure Out:
+
+- Frontend source code debugging in chrome
+- Prisma workflow re: migrations in main branch
+- 500 error in logging

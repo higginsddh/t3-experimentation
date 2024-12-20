@@ -9,11 +9,18 @@ import {
   LoadingOverlay,
   Text,
 } from "@mantine/core";
-import { IconAlertCircle, IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconEdit,
+  IconPhoto,
+  IconTrash,
+} from "@tabler/icons-react";
 import { trpc } from "../../utils/trpc";
 import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import { RecipeFormUpdate } from "./RecipeFormUpdate";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { env } from "../../env/client.mjs";
 
 export function RecipeList() {
   const {
@@ -21,6 +28,12 @@ export function RecipeList() {
     isInitialLoading: isLoadingItems,
     isError: isErrorFetchingItems,
   } = trpc.recipes.getAll.useQuery(undefined, {});
+
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName: env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    },
+  });
 
   return (
     <>
@@ -39,39 +52,58 @@ export function RecipeList() {
         </Alert>
       ) : (
         <>
-          {items?.map((item) => (
-            <Card withBorder key={item.id} mb={"lg"}>
-              <Flex justify="space-between" mb="xs">
-                <Text fw={500}>
-                  {(item.link?.trim() ?? "") !== "" ? (
-                    <a href={item.link} target="_blank">
-                      {item.title}
-                    </a>
-                  ) : (
-                    item.title
-                  )}
-                </Text>
-                <Group gap="xs">
-                  <EditRecipe id={item.id} />
+          {items?.map((item) => {
+            let url: string | null = null;
+            if (item.photo) {
+              const myImage = cld.image(item.photo);
+              url = myImage.toURL();
+            }
+            return (
+              <Card withBorder key={item.id} mb={"lg"}>
+                <Flex justify="space-between" mb="xs">
+                  <Text fw={500}>
+                    {(item.link?.trim() ?? "") !== "" ? (
+                      <a href={item.link} target="_blank">
+                        {item.title}
+                      </a>
+                    ) : (
+                      item.title
+                    )}
+                  </Text>
+                  <Group gap="xs">
+                    {url !== null ? (
+                      <ActionIcon
+                        component="a"
+                        href={url}
+                        target="_blank"
+                        variant="subtle"
+                        color="gray"
+                      >
+                        <IconPhoto />
+                      </ActionIcon>
+                    ) : null}
 
-                  <DeleteRecipe id={item.id} title={item.title} />
-                </Group>
-              </Flex>
-              <Group mb="xs">{item.notes}</Group>
-              <Flex justify="space-between">
-                <Group>
-                  {item.tags.map((tag) => (
-                    <Badge color="red" variant="light" key={tag}>
-                      {tag}
-                    </Badge>
-                  ))}
-                </Group>
-                <Button size="xs" variant="light" radius="lg">
-                  Add to shopping list
-                </Button>
-              </Flex>
-            </Card>
-          ))}
+                    <EditRecipe id={item.id} />
+
+                    <DeleteRecipe id={item.id} title={item.title} />
+                  </Group>
+                </Flex>
+                <Group mb="xs">{item.notes}</Group>
+                <Flex justify="space-between">
+                  <Group>
+                    {item.tags.map((tag) => (
+                      <Badge color="red" variant="light" key={tag}>
+                        {tag}
+                      </Badge>
+                    ))}
+                  </Group>
+                  <Button size="xs" variant="light" radius="lg">
+                    Add to shopping list
+                  </Button>
+                </Flex>
+              </Card>
+            );
+          })}
         </>
       )}
     </>
@@ -113,7 +145,7 @@ function DeleteRecipe({ id, title }: { id: string; title: string }) {
       labels: { confirm: "Delete", cancel: "Cancel" },
       onConfirm: () => {
         deleteRecipe({
-          itemsToDelete: [id],
+          id,
         });
       },
     });

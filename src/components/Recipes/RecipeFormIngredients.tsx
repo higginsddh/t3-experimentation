@@ -58,20 +58,24 @@ function Ingredient({
 
   useEffect(() => {
     if (field.id === idToReceiveFocus) {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        setIdToReceiveFocus(null);
-      }
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          setIdToReceiveFocus(null);
+        }
+      });
     }
   }, [idToReceiveFocus, setIdToReceiveFocus, field.id]);
 
   function addNewItem() {
+    const newId = v4();
     onChange(
       value.toSpliced(index + 1, 0, {
-        id: v4(),
+        id: newId,
         name: "",
       }),
     );
+    setIdToReceiveFocus(newId);
   }
 
   return (

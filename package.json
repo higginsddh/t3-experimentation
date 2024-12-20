@@ -11,6 +11,8 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.1",
+    "@cloudinary/url-gen": "^1.21.0",
     "@mantine/core": "^7.4.2",
     "@mantine/form": "^7.4.2",
     "@mantine/hooks": "^7.4.2",
@@ -27,6 +29,7 @@
     "@trpc/react-query": "^10.45.2",
     "@trpc/server": "^10.45.2",
     "@types/react-beautiful-dnd": "^13.1.8",
+    "cloudinary": "^2.5.1",
     "dotenv": "^16.4.5",
     "next": "^15.0.3",
     "next-pwa": "^5.6.0",
