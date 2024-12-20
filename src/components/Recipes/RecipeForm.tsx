@@ -17,7 +17,7 @@ import ReceipeFormIngredients, {
   type Ingredient,
 } from "./RecipeFormIngredients";
 import type { RecipeBaseType } from "../../server/trpc/router/recipes";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type FormData = {
   title: string;
@@ -49,6 +49,17 @@ export function RecipeForm({
   const [ingredients, setIngredients] = useState<Array<Ingredient>>(
     initialValues.ingredients,
   );
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (form.getValues().title === "") {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      });
+    }
+  }, [form]);
 
   form.watch("ingredients", (v) => setIngredients(v.value));
   return (
@@ -72,6 +83,7 @@ export function RecipeForm({
               withAsterisk
               label="Title"
               required
+              ref={inputRef}
               {...form.getInputProps("title")}
             />
 
