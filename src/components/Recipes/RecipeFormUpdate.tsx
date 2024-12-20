@@ -2,6 +2,7 @@ import { LoadingOverlay } from "@mantine/core";
 import { trpc } from "../../utils/trpc";
 import { RecipeForm } from "./RecipeForm";
 import { useState } from "react";
+import { v4 } from "uuid";
 
 export function RecipeFormUpdate({
   id,
@@ -39,8 +40,13 @@ export function RecipeFormUpdate({
         ...recipe,
         photo: recipe.photo ?? "",
         link: recipe.link ?? "",
-        // TODO
-        ingredients: [],
+        ingredients:
+          recipe.ingredients.length > 0
+            ? recipe.ingredients.map((i) => ({
+                id: v4(),
+                name: i,
+              }))
+            : [{ id: v4(), name: "" }],
       }}
       onClose={onClose}
       saving={saving}
@@ -50,6 +56,7 @@ export function RecipeFormUpdate({
           ...values,
         })
       }
+      title="Update Recipe"
     />
   );
 }

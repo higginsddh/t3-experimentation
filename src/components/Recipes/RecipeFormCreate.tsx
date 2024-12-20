@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { RecipeForm } from "./RecipeForm";
+import { v4 } from "uuid";
 
 export function RecipeFormCreate({ onClose }: { onClose: () => void }) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -25,7 +26,7 @@ export function RecipeFormCreate({ onClose }: { onClose: () => void }) {
       initialValues={{
         title: "",
         tags: [],
-        ingredients: [{ id: "", name: "" }],
+        ingredients: [{ id: v4(), name: "" }],
         link: "",
         notes: "",
         photo: "",
@@ -33,6 +34,7 @@ export function RecipeFormCreate({ onClose }: { onClose: () => void }) {
       onClose={onClose}
       saving={saving}
       onSave={(values) => addItem(values)}
+      title="Add Recipe"
     />
   );
 }

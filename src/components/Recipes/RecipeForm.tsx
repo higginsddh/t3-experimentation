@@ -34,12 +34,14 @@ export function RecipeForm({
   onSave,
   saving,
   errorMessage,
+  title,
 }: {
   initialValues: FormData;
   onClose: () => void;
   onSave: (values: RecipeBaseType) => void;
   saving: boolean;
   errorMessage: string | null;
+  title: string;
 }) {
   const form = useForm<FormData>({
     initialValues,
@@ -51,7 +53,7 @@ export function RecipeForm({
   form.watch("ingredients", (v) => setIngredients(v.value));
   return (
     <>
-      <Modal opened={true} onClose={onClose} title="Add Recipe">
+      <Modal opened={true} onClose={onClose} title={title}>
         <form
           onSubmit={form.onSubmit(() => {
             const values = form.getValues();
@@ -82,6 +84,8 @@ export function RecipeForm({
               }
             />
 
+            <Textarea label="Notes" {...form.getInputProps("notes")} />
+
             <FileInput label="Photo" placeholder="Select photo of recipe" />
 
             <TagsInput
@@ -95,8 +99,6 @@ export function RecipeForm({
               type="url"
               {...form.getInputProps("link")}
             />
-
-            <Textarea label="Notes" {...form.getInputProps("notes")} />
           </Stack>
 
           <Flex justify="space-between" mt="md">
