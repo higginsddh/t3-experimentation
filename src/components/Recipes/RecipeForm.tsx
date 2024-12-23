@@ -12,7 +12,7 @@ import {
   Text,
   Group,
   Center,
-  Anchor,
+  Loader,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import ReceipeFormIngredients, {
@@ -22,8 +22,8 @@ import type { RecipeBaseType } from "../../server/trpc/router/recipes";
 import { useEffect, useRef, useState } from "react";
 import { env } from "../../env/client.mjs";
 import { ImagePreview } from "./ImagePreview";
-import { NonBlockingLoader } from "../NonBlockingLoader";
 import React from "react";
+import { trpc } from "../../utils/trpc";
 
 type FormData = {
   title: string;
@@ -58,6 +58,9 @@ export function RecipeForm({
   );
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { data: existingRecipes } = trpc.recipes.getAll.useQuery(undefined, {});
+  const availableTags = getAvailableTags(existingRecipes);
+
   const [fileUploading, setFileUploading] = useState(false);
 
   useEffect(() => {
@@ -71,7 +74,7 @@ export function RecipeForm({
   }, [form]);
 
   form.watch("ingredients", (v) => setIngredients(v.value));
-  const saveInProgress = fileUploading || saving;
+
   return (
     <>
       <Modal opened={true} onClose={onClose} title={title}>
@@ -112,11 +115,10 @@ export function RecipeForm({
                   <ImagePreview imagePath={photo} width={width} />
                 </Group>
                 <Center style={{ width }}>
-                  <Anchor
-                    component="button"
-                    type="button"
-                    c="red"
+                  <Button
                     size="sm"
+                    variant="outline"
+                    color="red"
                     onClick={() => {
                       form.setValues({
                         photos: form
@@ -126,7 +128,7 @@ export function RecipeForm({
                     }}
                   >
                     Remove
-                  </Anchor>
+                  </Button>
                 </Center>
               </React.Fragment>
             ))}
@@ -174,13 +176,13 @@ export function RecipeForm({
                 }}
               />
             ) : (
-              <NonBlockingLoader />
+              <Loader />
             )}
 
             <TagsInput
               {...form.getInputProps("tags")}
               label="Tags"
-              data={["Seafood", "Vegetarian"]}
+              data={availableTags}
             />
 
             <TextInput
@@ -201,11 +203,11 @@ export function RecipeForm({
                 color="gray"
                 type="button"
                 onClick={onClose}
-                disabled={saveInProgress}
+                disabled={saving}
               >
                 Cancel
               </Button>
-              <Button color="blue" type="submit" loading={saveInProgress}>
+              <Button color="blue" type="submit" loading={saving}>
                 Save
               </Button>
             </Flex>
@@ -214,4 +216,21 @@ export function RecipeForm({
       </Modal>
     </>
   );
+}
+
+function getAvailableTags(recipes: Array<{ tags: Array<string> }> | undefined) {
+  if (!recipes) {
+    return [];
+  }
+
+  const distinctList: Array<string> = [];
+  recipes.forEach((r) => {
+    r.tags.forEach((t) => {
+      if (!distinctList.some((l) => l.toLowerCase() === t.toLowerCase())) {
+        distinctList.push(t);
+      }
+    });
+  });
+
+  return distinctList;
 }
