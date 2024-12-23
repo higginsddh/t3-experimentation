@@ -23,6 +23,7 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import { env } from "../../env/client.mjs";
 import { NonBlockingLoader } from "../NonBlockingLoader";
 import { Fragment } from "react";
+import { notifications } from "@mantine/notifications";
 
 export function RecipeList() {
   const {
@@ -34,8 +35,12 @@ export function RecipeList() {
 
   const { mutate: addToShoppingList, isLoading: addingItems } =
     trpc.recipes.addToShoppingList.useMutation({
-      onSettled: () => {
+      onSuccess: () => {
         utils.shoppingList.getAll.invalidate();
+        notifications.show({
+          title: "Items added!",
+          message: "The shopping list items were added",
+        });
       },
     });
 

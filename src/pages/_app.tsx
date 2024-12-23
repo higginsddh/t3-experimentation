@@ -7,8 +7,10 @@ import { trpc } from "../utils/trpc";
 import { MantineProvider, createTheme } from "@mantine/core";
 
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import "../styles/globals.css";
 import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -17,6 +19,7 @@ const theme = createTheme({
 const MyApp: AppType<unknown> = ({ Component }) => {
   return (
     <MantineProvider theme={theme}>
+      <Notifications />
       <ModalsProvider>
         <Head>
           <title>Food Planner</title>
