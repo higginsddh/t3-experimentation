@@ -38,7 +38,7 @@ export function RecipeFormUpdate({
       errorMessage={errorMessage}
       initialValues={{
         ...recipe,
-        photo: recipe.photo ?? "",
+        photos: recipe.photos ?? [],
         link: recipe.link ?? "",
         ingredients:
           recipe.ingredients.length > 0

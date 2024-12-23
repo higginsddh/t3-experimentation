@@ -25,7 +25,7 @@ model Recipe {
   title      String
   notes String
   link String?
-  photo String?
+  photos Json
   ingredients Json
   tags Json
 }

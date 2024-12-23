@@ -29,7 +29,7 @@ export function RecipeFormCreate({ onClose }: { onClose: () => void }) {
         ingredients: [{ id: v4(), name: "" }],
         link: "",
         notes: "",
-        photo: "",
+        photos: [],
       }}
       onClose={onClose}
       saving={saving}

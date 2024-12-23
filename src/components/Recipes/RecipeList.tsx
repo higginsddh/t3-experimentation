@@ -22,6 +22,7 @@ import { RecipeFormUpdate } from "./RecipeFormUpdate";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { env } from "../../env/client.mjs";
 import { NonBlockingLoader } from "../NonBlockingLoader";
+import { Fragment } from "react";
 
 export function RecipeList() {
   const {
@@ -64,36 +65,44 @@ export function RecipeList() {
       ) : (
         <>
           {items?.map((item) => {
-            let url: string | null = null;
-            if (item.photo) {
-              const myImage = cld.image(item.photo);
-              url = myImage.toURL();
-            }
             return (
               <Card withBorder key={item.id} mb={"lg"}>
                 <Flex justify="space-between" mb="xs">
-                  <Text fw={500}>
-                    {(item.link?.trim() ?? "") !== "" ? (
-                      <a href={item.link} target="_blank">
-                        {item.title}
-                      </a>
-                    ) : (
-                      item.title
-                    )}
-                  </Text>
-                  <Group gap="xs">
-                    {url !== null ? (
-                      <ActionIcon
-                        component="a"
-                        href={url}
-                        target="_blank"
-                        variant="subtle"
-                        color="gray"
-                      >
-                        <IconPhoto />
-                      </ActionIcon>
-                    ) : null}
+                  <Group>
+                    <Text fw={500}>
+                      {(item.link?.trim() ?? "") !== "" ? (
+                        <a href={item.link} target="_blank">
+                          {item.title}
+                        </a>
+                      ) : (
+                        item.title
+                      )}
+                    </Text>
+                    {item.photos.map((p) => {
+                      let url: string | null = null;
+                      if (p) {
+                        const myImage = cld.image(p);
+                        url = myImage.toURL();
+                      }
 
+                      return (
+                        <Fragment key={p}>
+                          {url ? (
+                            <ActionIcon
+                              component="a"
+                              href={url}
+                              target="_blank"
+                              variant="subtle"
+                              color="blue"
+                            >
+                              <IconPhoto />
+                            </ActionIcon>
+                          ) : null}
+                        </Fragment>
+                      );
+                    })}
+                  </Group>
+                  <Group gap="xs">
                     <EditRecipe id={item.id} />
 
                     <DeleteRecipe id={item.id} title={item.title} />

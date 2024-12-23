@@ -23,6 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import { env } from "../../env/client.mjs";
 import { ImagePreview } from "./ImagePreview";
 import { NonBlockingLoader } from "../NonBlockingLoader";
+import React from "react";
 
 type FormData = {
   title: string;
@@ -30,7 +31,7 @@ type FormData = {
   ingredients: Array<Ingredient>;
   link: string;
   notes: string;
-  photo: string;
+  photos: Array<string>;
 };
 
 const width = 250;
@@ -57,14 +58,6 @@ export function RecipeForm({
   );
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [imagePath, setImagePath] = useState<string | null>(
-    initialValues.photo,
-  );
-  const [file, setFile] = useState<File | null>(null);
-  const [selectedImagePreview, setSelectedImagePreview] = useState<
-    string | null
-  >(null);
-
   const [fileUploading, setFileUploading] = useState(false);
 
   useEffect(() => {
@@ -90,47 +83,9 @@ export function RecipeForm({
               ingredients: values.ingredients.map((i) => i.name),
             };
 
-            if (file) {
-              setFileUploading(true);
-              const fileData = new FormData();
-              fileData.append("file", file);
-              fileData.append(
-                "upload_preset",
-                env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
-              );
-              fileData.append(
-                "cloud_name",
-                env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-              );
-              fetch(
-                `https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-                {
-                  method: "post",
-                  body: fileData,
-                },
-              )
-                .then((resp) => resp.json())
-                .then((data) => {
-                  setFileUploading(false);
-                  const publicId = data.public_id as string;
-                  onSave({
-                    ...payload,
-                    photo: publicId,
-                  });
-                })
-                .catch((err) => {
-                  setFileUploading(true);
-
-                  // TODO:
-                  console.log(err);
-                });
-            } else {
-              onSave(payload);
-            }
+            onSave(payload);
           })}
         >
-          {saving ? <NonBlockingLoader /> : null}
-
           <Stack gap="sm">
             <TextInput
               withAsterisk
@@ -151,19 +106,10 @@ export function RecipeForm({
 
             <Textarea label="Notes" {...form.getInputProps("notes")} />
 
-            {imagePath || selectedImagePreview ? (
-              <>
+            {form.getValues().photos.map((photo) => (
+              <React.Fragment key={photo}>
                 <Group>
-                  {selectedImagePreview ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={selectedImagePreview}
-                      width={width}
-                      alt="Image Preview"
-                    />
-                  ) : imagePath ? (
-                    <ImagePreview imagePath={imagePath} width={width} />
-                  ) : null}
+                  <ImagePreview imagePath={photo} width={width} />
                 </Group>
                 <Center style={{ width }}>
                   <Anchor
@@ -172,33 +118,64 @@ export function RecipeForm({
                     c="red"
                     size="sm"
                     onClick={() => {
-                      setSelectedImagePreview(null);
-                      setImagePath(null);
                       form.setValues({
-                        photo: "",
+                        photos: form
+                          .getValues()
+                          .photos.filter((u) => u !== photo),
                       });
                     }}
                   >
                     Remove
                   </Anchor>
                 </Center>
-              </>
-            ) : null}
+              </React.Fragment>
+            ))}
 
-            <FileInput
-              label="Photo"
-              placeholder="Select photo of recipe"
-              accept="image/*"
-              onChange={(f) => {
-                setFile(f);
+            {!fileUploading ? (
+              <FileInput
+                label="Photo"
+                placeholder="Add photo of recipe"
+                accept="image/*"
+                onChange={(file) => {
+                  if (file) {
+                    setFileUploading(true);
+                    const fileData = new FormData();
+                    fileData.append("file", file);
+                    fileData.append(
+                      "upload_preset",
+                      env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+                    );
+                    fileData.append(
+                      "cloud_name",
+                      env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+                    );
+                    fetch(
+                      `https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                      {
+                        method: "post",
+                        body: fileData,
+                      },
+                    )
+                      .then((resp) => resp.json())
+                      .then((data) => {
+                        setFileUploading(false);
+                        const publicId = data.public_id as string;
+                        form.setValues({
+                          photos: [...form.getValues().photos, publicId],
+                        });
+                      })
+                      .catch((err) => {
+                        setFileUploading(false);
 
-                if (f) {
-                  setSelectedImagePreview(URL.createObjectURL(f));
-                } else {
-                  setSelectedImagePreview(null);
-                }
-              }}
-            />
+                        // TODO:
+                        console.log(err);
+                      });
+                  }
+                }}
+              />
+            ) : (
+              <NonBlockingLoader />
+            )}
 
             <TagsInput
               {...form.getInputProps("tags")}
