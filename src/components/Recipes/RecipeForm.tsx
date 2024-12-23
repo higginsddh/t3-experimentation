@@ -9,7 +9,6 @@ import {
   Stack,
   FileInput,
   Textarea,
-  LoadingOverlay,
   Text,
   Group,
   Center,
@@ -79,10 +78,9 @@ export function RecipeForm({
   }, [form]);
 
   form.watch("ingredients", (v) => setIngredients(v.value));
+  const saveInProgress = fileUploading || saving;
   return (
     <>
-      {fileUploading ? <LoadingOverlay visible zIndex={1500} /> : null}
-
       <Modal opened={true} onClose={onClose} title={title}>
         <form
           onSubmit={form.onSubmit(() => {
@@ -222,10 +220,15 @@ export function RecipeForm({
               ) : null}
             </div>
             <Flex justify="end" gap="md">
-              <Button color="gray" type="button" onClick={onClose}>
+              <Button
+                color="gray"
+                type="button"
+                onClick={onClose}
+                disabled={saveInProgress}
+              >
                 Cancel
               </Button>
-              <Button color="blue" type="submit">
+              <Button color="blue" type="submit" loading={saveInProgress}>
                 Save
               </Button>
             </Flex>
